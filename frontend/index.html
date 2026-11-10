@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KhetLoop Setup Check</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body { margin:0; min-height:100vh; display:grid; place-items:center;
+           background:#08110c; color:#eef3ea; font-family:Inter,sans-serif; }
+    .box { text-align:center; padding:32px; border:1px solid rgba(163,214,92,.14);
+           border-radius:16px; background:#0f1b14; }
+    h1 { font-family:"Cormorant Garamond",serif; font-weight:600; font-size:42px; margin:0 0 8px; }
+    h1 span { color:#a3d65c; }
+    pre { text-align:left; color:#93a399; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Khet<span>Loop</span></h1>
+    <p>Frontend setup check</p>
+    <pre id="out">Checking...</pre>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script>
+    document.getElementById("out").textContent =
+      "API_BASE:   " + API_BASE + "\n" +
+      "USE_MOCK:   " + USE_MOCK + "\n" +
+      "MOCK_BASE:  " + MOCK_BASE + "\n" +
+      "EXPERT_KEY: " + EXPERT_KEY + "\n" +
+      "Leaflet:    " + (typeof L !== "undefined" ? "loaded (v" + L.version + ")" : "NOT loaded (check internet)");
+  </script>
+</body>
+</html>

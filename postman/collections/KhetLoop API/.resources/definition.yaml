@@ -1,0 +1,8 @@
+$kind: collection
+description: ""
+variables:
+  baseUrl: http://localhost:5000
+  expertKey: demo-expert-key
+  farmId: farm_4a5b6c7d
+  reportId: rep_a1b2c3d4
+  clusterId: clu_1a2b3c4d

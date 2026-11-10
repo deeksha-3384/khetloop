@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/api/reports"
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: farm_id
+      value: "{{farmId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("status is 400", function () { pm.response.to.have.status(400); });
+      pm.test("envelope has ok", function () { pm.expect(pm.response.json()).to.have.property("ok"); });
+    language: text/javascript
+order: 6000

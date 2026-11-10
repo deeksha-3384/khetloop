@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "data": {
+    "farms": [
+      { "id": "farm_4a5b6c7d", "crop": "tomato", "area_label": "Kolar North", "farmer_name": "Ramesh", "language": "kn", "report_count": 3, "data_source": "live" },
+      { "id": "farm_5b6c7d8e", "crop": "tomato", "area_label": "Kolar South", "farmer_name": "Sunita", "language": "hi", "report_count": 1, "data_source": "simulated" },
+      { "id": "farm_6c7d8e9f", "crop": "chilli", "area_label": "Chikkaballapur", "farmer_name": "Mahesh", "language": "kn", "report_count": 0, "data_source": "simulated" }
+    ]
+  }
+}

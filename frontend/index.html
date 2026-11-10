@@ -3,40 +3,70 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KhetLoop Setup Check</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&family=Noto+Sans+Devanagari:wght@400;500&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet" />
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+  <title>KhetLoop API Test</title>
   <style>
-    body { margin:0; min-height:100vh; display:grid; place-items:center;
-           background:#08110c; color:#eef3ea; font-family:Inter,sans-serif; }
-    .box { text-align:center; padding:32px; border:1px solid rgba(163,214,92,.14);
-           border-radius:16px; background:#0f1b14; }
-    h1 { font-family:"Cormorant Garamond",serif; font-weight:600; font-size:42px; margin:0 0 8px; }
-    h1 span { color:#a3d65c; }
-    pre { text-align:left; color:#93a399; }
+    body { margin:0; padding:32px; background:#08110c; color:#eef3ea; font-family:Consolas,monospace; font-size:14px; }
+    h1 { font-family:Georgia,serif; color:#a3d65c; }
+    .pass { color:#a3d65c; } .fail { color:#ff7b7b; }
+    pre { white-space:pre-wrap; }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>Khet<span>Loop</span></h1>
-    <p>Frontend setup check</p>
-    <pre id="out">Checking...</pre>
-  </div>
+  <h1>KhetLoop API test (USE_MOCK must be true)</h1>
+  <pre id="out">Running...</pre>
 
   <script src="js/config.js"></script>
+  <script src="js/constants.js"></script>
+  <script src="js/api.js"></script>
   <script>
-    document.getElementById("out").textContent =
-      "API_BASE:   " + API_BASE + "\n" +
-      "USE_MOCK:   " + USE_MOCK + "\n" +
-      "MOCK_BASE:  " + MOCK_BASE + "\n" +
-      "EXPERT_KEY: " + EXPERT_KEY + "\n" +
-      "Leaflet:    " + (typeof L !== "undefined" ? "loaded (v" + L.version + ")" : "NOT loaded (check internet)");
+    (async function () {
+      var out = document.getElementById("out");
+      out.innerHTML = "";
+      var failures = 0;
+
+      // expectCode = null means the call should succeed
+      function check(name, res, expectCode) {
+        var pass = expectCode ? (!res.ok && res.error.code === expectCode) : res.ok;
+        if (!pass) failures++;
+        var detail = res.ok ? "ok" : (res.error.code + ": " + res.error.message);
+        out.innerHTML += '<span class="' + (pass ? "pass" : "fail") + '">' +
+          (pass ? "PASS " : "FAIL ") + name + (expectCode ? " (expects " + expectCode + ")" : "") +
+          "</span>  -> " + detail + "\n";
+      }
+
+      check("listFarms", await listFarms(), null);
+      check("getReport escalated", await getReport("rep_a1b2c3d4"), null);
+      check("getReport preliminary", await getReport("rep_b2c3d4e5"), null);
+      check("getReport abstain", await getReport("rep_c3d4e5f6"), null);
+      check("getReport expert reviewed", await getReport("rep_d4e5f6a7"), null);
+      check("getReport unknown id", await getReport("rep_00000000"), "NOT_FOUND");
+      check("getFarmTimeline", await getFarmTimeline("farm_4a5b6c7d"), null);
+      check("listExpertCases", await listExpertCases("expert_review_pending"), null);
+      check("submitReview missing guidance", await submitReview("rep_a1b2c3d4", { expert_name: "Demo Expert" }), "INVALID_REQUEST");
+      check("submitReview valid", await submitReview("rep_a1b2c3d4", {
+        expert_name: "Demo Expert",
+        guidance: "Remove affected leaves and monitor the plant.",
+        confirmed_issue: "early_blight"
+      }), null);
+      check("submitReview again", await submitReview("rep_a1b2c3d4", {
+        expert_name: "Demo Expert", guidance: "Again", confirmed_issue: null
+      }), "CONFLICT");
+      check("getClusters", await getClusters(), null);
+      check("getClusterDetail", await getClusterDetail("clu_1a2b3c4d"), null);
+      check("runReminders", await runReminders(), null);
+      check("simulateCluster", await simulateCluster({ crop: "tomato", suspected_issue: "early_blight", area_label: "Kolar North", target_farm_id: "farm_4a5b6c7d" }), null);
+      check("getHealth", await getHealth(), null);
+
+      var fd = new FormData();
+      fd.append("farm_id", "farm_4a5b6c7d");
+      check("submitReport without image", await submitReport(fd), "INVALID_REQUEST");
+      fd.append("image", new Blob(["x"], { type: "image/jpeg" }), "test.jpg");
+      check("submitReport with image", await submitReport(fd), null);
+
+      out.innerHTML += "\n" + (failures === 0
+        ? '<span class="pass">ALL CHECKS PASSED</span>'
+        : '<span class="fail">' + failures + " CHECK(S) FAILED</span>");
+    })();
   </script>
 </body>
 </html>

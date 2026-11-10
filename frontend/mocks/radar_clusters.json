@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "data": {
+    "generated_at": "2026-11-10T09:30:00Z",
+    "has_simulated": true,
+    "clusters": [
+      {
+        "id": "clu_1a2b3c4d", "crop": "tomato", "suspected_issue": "early_blight", "area_label": "Kolar North",
+        "centroid_lat": 13.14, "centroid_lng": 78.13, "severity": "watch", "report_count": 3,
+        "window_hours": 72, "label": "potential_cluster", "data_source": "simulated",
+        "created_at": "2026-11-10T09:20:00Z"
+      },
+      {
+        "id": "clu_2b3c4d5e", "crop": "tomato", "suspected_issue": "late_blight", "area_label": "Chikkaballapur",
+        "centroid_lat": 13.43, "centroid_lng": 77.73, "severity": "elevated", "report_count": 5,
+        "window_hours": 72, "label": "potential_cluster", "data_source": "simulated",
+        "created_at": "2026-11-10T08:50:00Z"
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 """
-Shared constants for KhetLoop.
-Owner: P1. Changes need approval from all 4 team members (contract PR).
+Shared constants for KhetLoop. Master Contract v2.0.
+Owner: P1. Changes go through P1 (contract version bump). 
 Frontend mirrors this file in frontend/js/constants.js (same names and values).
 """
 
@@ -15,7 +15,21 @@ ISSUES = [
     "leaf_curl", "healthy", "unknown",
 ]
 HIGH_RISK_ISSUES = ["late_blight"]
+
+# Severity words checked against the farmer's transcript (decision.py only).
+# English:
 SEVERITY_KEYWORDS = ["spreading", "whole field", "many plants", "dying", "all plants"]
+# Kannada (spreading, whole field/farm, many plants, dying/drying, all plants):
+SEVERITY_KEYWORDS_KN = [
+    "ಹರಡುತ್ತಿದೆ", "ಹರಡುತ್ತಿವೆ", "ಇಡೀ ಹೊಲ", "ಇಡೀ ತೋಟ", "ಹಲವು ಗಿಡ", "ಹಲವಾರು ಗಿಡ",
+    "ಸಾಯುತ್ತಿದೆ", "ಸಾಯುತ್ತಿವೆ", "ಒಣಗುತ್ತಿವೆ", "ಎಲ್ಲಾ ಗಿಡ",
+]
+# Hindi (spreading, whole field, many plants, drying/dying, all plants):
+SEVERITY_KEYWORDS_HI = [
+    "फैल रहा", "फैल रही", "फैल रहे", "पूरा खेत", "पूरे खेत", "कई पौधे", "बहुत पौधे",
+    "सूख रहे", "मर रहे", "सभी पौधे", "सारे पौधे",
+]
+
 DATA_SOURCES = ["live", "cached", "simulated", "unverified"]
 CLUSTER_SEVERITIES = ["watch", "elevated"]
 CLUSTER_LABEL = "potential_cluster"
@@ -36,12 +50,9 @@ ABSTAIN_RETRY_WINDOW_MIN = 30
 FOLLOW_UP_HOURS = 48
 COORD_DECIMALS = 2
 
-# NOTE (open issue, needs a contract PR before Phase 4):
-# This template is copied EXACTLY from the plan, but it contains the word
-# "outbreak", which the plan itself forbids in any output. Proposed fix:
-# "...This is not a confirmed diagnosis. Please inspect..."
+# Fixed in v2.0: the word "outbreak" is forbidden in any output.
 ALERT_TEMPLATE = (
     "Crop health notice: several recent reports of similar {crop} leaf symptoms "
-    "were recorded near {area_label}. This is not a confirmed outbreak. "
+    "were recorded near {area_label}. This is not a confirmed diagnosis. "
     "Please inspect your plants and send a photo if you notice similar symptoms."
 )

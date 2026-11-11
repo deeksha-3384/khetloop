@@ -188,7 +188,7 @@ def upload_image(image_bytes: bytes, farm_id: str, content_type: str = "image/jp
     if _is_memory():
         _MEM["images"][path] = bytes(image_bytes)
         return path
-    _supabase_todo("upload_image")
+    return _sb_call("upload_image", locals())
 
 
 def signed_image_url(path: str, expires_s: int = 3600) -> str:
@@ -198,7 +198,7 @@ def signed_image_url(path: str, expires_s: int = 3600) -> str:
         raise DBError("DB_ERROR", "expires_s must be a positive integer")
     if _is_memory():
         return f"https://signed-url.example/{path}"
-    _supabase_todo("signed_image_url")
+    return _sb_call("signed_image_url", locals())
 
 
 # ---------------------------------------------------------------------------
@@ -228,7 +228,7 @@ def get_or_create_farmer(telegram_chat_id: int | None, name: str, language: str)
         }
         _MEM["farmers"].append(row)
         return _farmer_out(row)
-    _supabase_todo("get_or_create_farmer")
+    return _sb_call("get_or_create_farmer", locals())
 
 
 def get_farmer_for_farm(farm_id: str) -> dict | None:
@@ -240,7 +240,7 @@ def get_farmer_for_farm(farm_id: str) -> dict | None:
             return None
         farmer = _mem_find("farmers", farm["farmer_id"])
         return _farmer_out(farmer) if farmer else None
-    _supabase_todo("get_farmer_for_farm")
+    return _sb_call("get_farmer_for_farm", locals())
 
 
 def get_or_create_farm(farmer_id: str, crop: str, sowing_date: str | None = None,
@@ -280,7 +280,7 @@ def get_or_create_farm(farmer_id: str, crop: str, sowing_date: str | None = None
         }
         _MEM["farms"].append(row)
         return _farm_out(row)
-    _supabase_todo("get_or_create_farm")
+    return _sb_call("get_or_create_farm", locals())
 
 
 def get_farm(farm_id: str) -> dict | None:
@@ -289,7 +289,7 @@ def get_farm(farm_id: str) -> dict | None:
     if _is_memory():
         row = _mem_find("farms", farm_id)
         return _farm_out(row) if row else None
-    _supabase_todo("get_farm")
+    return _sb_call("get_farm", locals())
 
 
 def list_farms() -> list[dict]:
@@ -308,7 +308,7 @@ def list_farms() -> list[dict]:
                 "data_source": farm["data_source"],
             })
         return out
-    _supabase_todo("list_farms")
+    return _sb_call("list_farms", locals())
 
 # ---------------------------------------------------------------------------
 # Reports, events, expert reviews
@@ -446,7 +446,7 @@ def insert_report(farm_id: str, image_path: str, voice_transcript: str | None,
         }
         _MEM["reports"].append(row)
         return _mem_report_model(row)
-    _supabase_todo("insert_report")
+    return _sb_call("insert_report", locals())
 
 
 def add_report_event(report_id: str, status: str, actor: str, note: str | None = None) -> dict:
@@ -466,7 +466,7 @@ def add_report_event(report_id: str, status: str, actor: str, note: str | None =
         }
         _MEM["events"].append(row)
         return _event_out(row)
-    _supabase_todo("add_report_event")
+    return _sb_call("add_report_event", locals())
 
 
 def update_report_status(report_id: str, status: str) -> None:
@@ -479,7 +479,7 @@ def update_report_status(report_id: str, status: str) -> None:
             raise DBError("DB_ERROR", f"report not found: {report_id}")
         row["status"] = status
         return None
-    _supabase_todo("update_report_status")
+    return _sb_call("update_report_status", locals())
 
 
 def get_report(report_id: str) -> dict | None:
@@ -488,7 +488,7 @@ def get_report(report_id: str) -> dict | None:
     if _is_memory():
         row = _mem_find("reports", report_id)
         return _mem_report_model(row) if row else None
-    _supabase_todo("get_report")
+    return _sb_call("get_report", locals())
 
 
 def list_farm_reports(farm_id: str) -> list[dict]:
@@ -497,7 +497,7 @@ def list_farm_reports(farm_id: str) -> list[dict]:
     if _is_memory():
         rows = [r for r in _MEM["reports"] if r["farm_id"] == farm_id]
         return [_mem_timeline_item(r) for r in reversed(rows)]
-    _supabase_todo("list_farm_reports")
+    return _sb_call("list_farm_reports", locals())
 
 
 def count_recent_abstains(farm_id: str, minutes: int) -> int:
@@ -517,7 +517,7 @@ def count_recent_abstains(farm_id: str, minutes: int) -> int:
                 break
             count += 1
         return count
-    _supabase_todo("count_recent_abstains")
+    return _sb_call("count_recent_abstains", locals())
 
 
 def list_expert_cases(status: str = "expert_review_pending") -> list[dict]:
@@ -544,7 +544,7 @@ def list_expert_cases(status: str = "expert_review_pending") -> list[dict]:
                 "data_source": row["data_source"],
             })
         return out
-    _supabase_todo("list_expert_cases")
+    return _sb_call("list_expert_cases", locals())
 
 
 def insert_expert_review(report_id: str, expert_name: str, guidance: str,
@@ -570,7 +570,7 @@ def insert_expert_review(report_id: str, expert_name: str, guidance: str,
         }
         _MEM["reviews"].append(row)
         return _review_out(row)
-    _supabase_todo("insert_expert_review")
+    return _sb_call("insert_expert_review", locals())
 
 
 # ---------------------------------------------------------------------------
@@ -674,7 +674,7 @@ def find_similar_recent_reports(crop: str, suspected_issue: str, since_hours: in
                 "suspected_issue": row["suspected_issue"],
             })
         return out
-    _supabase_todo("find_similar_recent_reports")
+    return _sb_call("find_similar_recent_reports", locals())
 
 
 def find_nearby_farms(crop: str, lat: float, lng: float, radius_km: float,
@@ -706,7 +706,7 @@ def find_nearby_farms(crop: str, lat: float, lng: float, radius_km: float,
                 "lng": farm["lng"],
             })
         return out
-    _supabase_todo("find_nearby_farms")
+    return _sb_call("find_nearby_farms", locals())
 
 
 def create_cluster(crop: str, suspected_issue: str, area_label: str, centroid_lat: float,
@@ -749,7 +749,7 @@ def create_cluster(crop: str, suspected_issue: str, area_label: str, centroid_la
         for report_id in unique_ids:
             _MEM["cluster_reports"].append({"cluster_id": row["id"], "report_id": report_id})
         return _cluster_out(row)
-    _supabase_todo("create_cluster")
+    return _sb_call("create_cluster", locals())
 
 
 def update_cluster(cluster_id: str, severity: str, report_count: int, report_ids: list[str]) -> dict:
@@ -775,14 +775,14 @@ def update_cluster(cluster_id: str, severity: str, report_count: int, report_ids
         row["severity"] = severity
         row["report_count"] = report_count
         return _cluster_out(row)
-    _supabase_todo("update_cluster")
+    return _sb_call("update_cluster", locals())
 
 
 def list_clusters() -> list[dict]:
     """Public Cluster models (no farm or report ids), newest first."""
     if _is_memory():
         return [_cluster_out(row) for row in reversed(_MEM["clusters"])]
-    _supabase_todo("list_clusters")
+    return _sb_call("list_clusters", locals())
 
 
 def get_cluster_detail(cluster_id: str) -> dict | None:
@@ -811,7 +811,7 @@ def get_cluster_detail(cluster_id: str) -> dict | None:
             })
         alerts = [_alert_out(a) for a in _MEM["alerts"] if a["cluster_id"] == cluster_id]
         return {"cluster": _cluster_out(row), "reports": reports, "alerts": alerts}
-    _supabase_todo("get_cluster_detail")
+    return _sb_call("get_cluster_detail", locals())
 
 
 def insert_alert(cluster_id: str, farm_id: str, message: str, delivered: bool,
@@ -843,7 +843,7 @@ def insert_alert(cluster_id: str, farm_id: str, message: str, delivered: bool,
         }
         _MEM["alerts"].append(row)
         return _alert_out(row)
-    _supabase_todo("insert_alert")
+    return _sb_call("insert_alert", locals())
 
 
 def insert_reminder(report_id: str, due_at: str, message: str) -> dict:
@@ -864,7 +864,7 @@ def insert_reminder(report_id: str, due_at: str, message: str) -> dict:
         }
         _MEM["reminders"].append(row)
         return _reminder_out(row)
-    _supabase_todo("insert_reminder")
+    return _sb_call("insert_reminder", locals())
 
 
 def due_reminders(now_iso: str) -> list[dict]:
@@ -883,7 +883,7 @@ def due_reminders(now_iso: str) -> list[dict]:
             item["telegram_chat_id"] = farmer["telegram_chat_id"] if farmer else None
             out.append(item)
         return out
-    _supabase_todo("due_reminders")
+    return _sb_call("due_reminders", locals())
 
 
 def mark_reminder_sent(reminder_id: str) -> None:
@@ -896,4 +896,617 @@ def mark_reminder_sent(reminder_id: str) -> None:
         row["sent"] = True
         row["sent_at"] = _now_iso()
         return None
-    _supabase_todo("mark_reminder_sent")
+    return _sb_call("mark_reminder_sent", locals())
+
+
+# ---------------------------------------------------------------------------
+# Supabase mode (DB_MODE=supabase)
+# ---------------------------------------------------------------------------
+import inspect
+
+_SB_CLIENT = None
+
+
+def _sb():
+    """Create the Supabase client once (server-side, uses the service key)."""
+    global _SB_CLIENT
+    if _SB_CLIENT is None:
+        url = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
+        if url.endswith("/rest/v1"):
+            url = url[: -len("/rest/v1")]
+        key = os.getenv("SUPABASE_SERVICE_KEY", "").strip()
+        if not url or not key:
+            raise DBError("DB_ERROR", "SUPABASE_URL and SUPABASE_SERVICE_KEY must be set in .env")
+        try:
+            from supabase import create_client
+            _SB_CLIENT = create_client(url, key)
+        except Exception as exc:
+            raise DBError("DB_ERROR", f"could not connect to Supabase: {exc}")
+    return _SB_CLIENT
+
+
+def _bucket() -> str:
+    return os.getenv("SUPABASE_STORAGE_BUCKET", "report-images").strip() or "report-images"
+
+
+def _sb_call(name: str, local_vars: dict):
+    """Call _sb_<name> with only the arguments it declares. Any failure becomes a DBError."""
+    func = globals().get("_sb_" + name)
+    if func is None:
+        raise DBError("DB_ERROR", f"{name}: Supabase mode is not built yet. Use DB_MODE=memory for now.")
+    wanted = inspect.signature(func).parameters
+    kwargs = {k: local_vars[k] for k in wanted if k in local_vars}
+    try:
+        return func(**kwargs)
+    except DBError:
+        raise
+    except Exception as exc:
+        raise DBError("DB_ERROR", f"{name} failed: {exc}")
+
+
+def _sb_upload_image(image_bytes, farm_id, content_type):
+    path = f"{farm_id}/{uuid.uuid4().hex[:12]}.jpg"
+    _sb().storage.from_(_bucket()).upload(
+        path=path,
+        file=bytes(image_bytes),
+        file_options={"content-type": content_type},
+    )
+    return path
+
+
+def _sb_signed_image_url(path, expires_s):
+    result = _sb().storage.from_(_bucket()).create_signed_url(path, expires_s)
+    url = None
+    if isinstance(result, dict):
+        url = result.get("signedURL") or result.get("signedUrl")
+    if not url:
+        raise DBError("DB_ERROR", f"could not sign image path: {path}")
+    if not url.startswith("http"):
+        base = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
+        url = f"{base}/storage/v1{url}"
+    return url
+
+
+# ---- Supabase: farmers and farms ----
+def _sb_get_or_create_farmer(telegram_chat_id, name, language):
+    table = _sb().table("farmers")
+    if telegram_chat_id is not None:
+        found = table.select("*").eq("telegram_chat_id", telegram_chat_id).limit(1).execute().data
+        if found:
+            updated = table.update({"name": name, "language": language}).eq("id", found[0]["id"]).execute().data
+            return _farmer_out(updated[0] if updated else {**found[0], "name": name, "language": language})
+    try:
+        created = table.insert({
+            "name": name,
+            "language": language,
+            "telegram_chat_id": telegram_chat_id,
+        }).execute().data
+    except Exception:
+        # two requests may race on the same chat id: read the row the other one created
+        if telegram_chat_id is not None:
+            found = table.select("*").eq("telegram_chat_id", telegram_chat_id).limit(1).execute().data
+            if found:
+                return _farmer_out(found[0])
+        raise
+    return _farmer_out(created[0])
+
+
+def _sb_get_farmer_for_farm(farm_id):
+    farms = _sb().table("farms").select("farmer_id").eq("id", farm_id).limit(1).execute().data
+    if not farms:
+        return None
+    farmers = _sb().table("farmers").select("*").eq("id", farms[0]["farmer_id"]).limit(1).execute().data
+    return _farmer_out(farmers[0]) if farmers else None
+
+
+def _sb_get_or_create_farm(farmer_id, crop, sowing_date, area_label, lat, lng):
+    table = _sb().table("farms")
+    found = (table.select("*").eq("farmer_id", farmer_id).eq("crop", crop)
+             .order("created_at").limit(1).execute().data)
+    if found:
+        changes = {}
+        if sowing_date is not None:
+            changes["sowing_date"] = sowing_date
+        if area_label is not None:
+            changes["area_label"] = area_label
+        if lat is not None:
+            changes["lat"] = lat
+        if lng is not None:
+            changes["lng"] = lng
+        if not changes:
+            return _farm_out(found[0])
+        updated = table.update(changes).eq("id", found[0]["id"]).execute().data
+        return _farm_out(updated[0] if updated else {**found[0], **changes})
+    created = table.insert({
+        "farmer_id": farmer_id,
+        "crop": crop,
+        "sowing_date": sowing_date,
+        "area_label": area_label,
+        "lat": lat,
+        "lng": lng,
+    }).execute().data
+    return _farm_out(created[0])
+
+
+def _sb_get_farm(farm_id):
+    found = _sb().table("farms").select("*").eq("id", farm_id).limit(1).execute().data
+    return _farm_out(found[0]) if found else None
+
+
+def _sb_list_farms():
+    farms = _sb().table("farms").select("*").order("created_at").execute().data or []
+    farmers = _sb().table("farmers").select("id,name,language").execute().data or []
+    reports = _sb().table("reports").select("farm_id").execute().data or []
+    by_farmer = {f["id"]: f for f in farmers}
+    counts = {}
+    for r in reports:
+        counts[r["farm_id"]] = counts.get(r["farm_id"], 0) + 1
+    out = []
+    for farm in farms:
+        farmer = by_farmer.get(farm["farmer_id"])
+        out.append({
+            "id": farm["id"],
+            "crop": farm["crop"],
+            "area_label": farm["area_label"],
+            "farmer_name": farmer["name"] if farmer else None,
+            "language": farmer["language"] if farmer else None,
+            "report_count": counts.get(farm["id"], 0),
+            "data_source": farm["data_source"],
+        })
+    return out
+
+
+# ---- Supabase: reports, events, expert reviews ----
+import re
+
+
+def _ts(value):
+    """Postgres timestamp -> '2026-11-12T09:15:00Z' (the format the contract uses)."""
+    if value is None:
+        return None
+    return _parse_ts(re.sub(r"\.\d+", "", str(value))).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _iso_z(moment) -> str:
+    return moment.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _safe_url(path):
+    """Signed URL, or None if the image is missing (so one bad image never breaks a whole report)."""
+    try:
+        return signed_image_url(path)
+    except DBError:
+        return None
+
+
+def _sb_review_out(row):
+    return {
+        "id": row["id"],
+        "report_id": row["report_id"],
+        "expert_name": row["expert_name"],
+        "guidance": row["guidance"],
+        "confirmed_issue": row["confirmed_issue"],
+        "created_at": _ts(row["created_at"]),
+    }
+
+
+def _sb_event_out(row):
+    out = {"status": row["status"], "actor": row["actor"], "timestamp": _ts(row["created_at"])}
+    if row.get("note") is not None:
+        out["note"] = row["note"]
+    return out
+
+
+def _sb_report_model(row, farm, events, review):
+    return {
+        "id": row["id"],
+        "farm_id": row["farm_id"],
+        "crop": farm["crop"] if farm else None,
+        "created_at": _ts(row["created_at"]),
+        "status": row["status"],
+        "data_source": row["data_source"],
+        "image_url": _safe_url(row["image_path"]),
+        "voice_transcript": row["voice_transcript"],
+        "voice_language": row["voice_language"],
+        "assessment": {
+            "decision": row["decision"],
+            "suspected_issue": row["suspected_issue"],
+            "confidence_band": row["confidence_band"],
+            "image_quality": row["image_quality"],
+            "visible_symptoms": row["visible_symptoms"] or [],
+            "confirmed": bool(review is not None and review["confirmed_issue"] is not None),
+        },
+        "why": row["why"] or [],
+        "weather": row["weather"],
+        "risk": row["risk"],
+        "farmer_reply": {
+            "language": row["reply_language"],
+            "text": row["reply_text"],
+            "audio_url": None,
+        },
+        "events": [_sb_event_out(e) for e in events],
+        "expert_review": _sb_review_out(review) if review else None,
+    }
+
+
+def _sb_reviews_by_report(report_ids):
+    if not report_ids:
+        return {}
+    rows = _sb().table("expert_reviews").select("*").in_("report_id", report_ids).execute().data or []
+    return {r["report_id"]: r for r in rows}
+
+
+def _sb_insert_report(farm_id, image_path, voice_transcript, voice_language, decision, issue,
+                      band, quality, symptoms, escalation_reason, why, weather, risk,
+                      reply_language, reply_text, status, data_source):
+    farm = _sb().table("farms").select("*").eq("id", farm_id).limit(1).execute().data
+    if not farm:
+        raise DBError("DB_ERROR", f"farm not found: {farm_id}")
+    created = _sb().table("reports").insert({
+        "farm_id": farm_id,
+        "image_path": image_path,
+        "voice_transcript": voice_transcript,
+        "voice_language": voice_language,
+        "decision": decision,
+        "suspected_issue": issue,
+        "confidence_band": band,
+        "image_quality": quality,
+        "visible_symptoms": symptoms,
+        "escalation_reason": escalation_reason,
+        "why": why,
+        "weather": weather,
+        "risk": risk,
+        "reply_language": reply_language,
+        "reply_text": reply_text,
+        "status": status,
+        "data_source": data_source,
+    }).execute().data
+    return _sb_report_model(created[0], farm[0], [], None)
+
+
+def _sb_add_report_event(report_id, status, actor, note):
+    found = _sb().table("reports").select("id").eq("id", report_id).limit(1).execute().data
+    if not found:
+        raise DBError("DB_ERROR", f"report not found: {report_id}")
+    created = _sb().table("report_events").insert({
+        "report_id": report_id,
+        "status": status,
+        "actor": actor,
+        "note": note,
+    }).execute().data
+    return _sb_event_out(created[0])
+
+
+def _sb_update_report_status(report_id, status):
+    updated = _sb().table("reports").update({"status": status}).eq("id", report_id).execute().data
+    if not updated:
+        raise DBError("DB_ERROR", f"report not found: {report_id}")
+    return None
+
+
+def _sb_get_report(report_id):
+    rows = _sb().table("reports").select("*").eq("id", report_id).limit(1).execute().data
+    if not rows:
+        return None
+    row = rows[0]
+    farms = _sb().table("farms").select("*").eq("id", row["farm_id"]).limit(1).execute().data
+    events = (_sb().table("report_events").select("*").eq("report_id", report_id)
+              .order("created_at").order("id").execute().data or [])
+    reviews = _sb().table("expert_reviews").select("*").eq("report_id", report_id).limit(1).execute().data
+    return _sb_report_model(row, farms[0] if farms else None, events, reviews[0] if reviews else None)
+
+
+def _sb_list_farm_reports(farm_id):
+    rows = (_sb().table("reports").select("*").eq("farm_id", farm_id)
+            .order("created_at", desc=True).execute().data or [])
+    reviews = _sb_reviews_by_report([r["id"] for r in rows])
+    out = []
+    for row in rows:
+        review = reviews.get(row["id"])
+        out.append({
+            "report_id": row["id"],
+            "created_at": _ts(row["created_at"]),
+            "status": row["status"],
+            "decision": row["decision"],
+            "suspected_issue": row["suspected_issue"],
+            "confidence_band": row["confidence_band"],
+            "image_url": _safe_url(row["image_path"]),
+            "expert_guidance": review["guidance"] if review else None,
+        })
+    return out
+
+
+def _sb_count_recent_abstains(farm_id, minutes):
+    cutoff = _iso_z(datetime.now(timezone.utc) - timedelta(minutes=minutes))
+    rows = (_sb().table("reports").select("decision").eq("farm_id", farm_id)
+            .gte("created_at", cutoff).order("created_at", desc=True).execute().data or [])
+    count = 0
+    for row in rows:
+        if row["decision"] != "abstain_request_better_image":
+            break
+        count += 1
+    return count
+
+
+def _sb_list_expert_cases(status):
+    rows = (_sb().table("reports").select("*").eq("status", status)
+            .order("created_at").execute().data or [])
+    if not rows:
+        return []
+    farm_ids = list({r["farm_id"] for r in rows})
+    farms = _sb().table("farms").select("id,crop,area_label").in_("id", farm_ids).execute().data or []
+    by_id = {f["id"]: f for f in farms}
+    out = []
+    for row in rows:
+        farm = by_id.get(row["farm_id"])
+        out.append({
+            "report_id": row["id"],
+            "created_at": _ts(row["created_at"]),
+            "farm_id": row["farm_id"],
+            "crop": farm["crop"] if farm else None,
+            "area_label": farm["area_label"] if farm else None,
+            "suspected_issue": row["suspected_issue"],
+            "confidence_band": row["confidence_band"],
+            "decision": row["decision"],
+            "escalation_reason": row["escalation_reason"],
+            "image_url": _safe_url(row["image_path"]),
+            "rain_expected": bool((row["weather"] or {}).get("rain_expected", False)),
+            "data_source": row["data_source"],
+        })
+    return out
+
+
+def _sb_insert_expert_review(report_id, expert_name, guidance, confirmed_issue):
+    found = _sb().table("reports").select("id").eq("id", report_id).limit(1).execute().data
+    if not found:
+        raise DBError("DB_ERROR", f"report not found: {report_id}")
+    existing = _sb().table("expert_reviews").select("id").eq("report_id", report_id).limit(1).execute().data
+    if existing:
+        raise DBError("DB_ERROR", f"expert review already exists for report {report_id}")
+    created = _sb().table("expert_reviews").insert({
+        "report_id": report_id,
+        "expert_name": expert_name,
+        "guidance": guidance,
+        "confirmed_issue": confirmed_issue,
+    }).execute().data
+    return _sb_review_out(created[0])
+
+
+
+# ---- Supabase: nearby search, clusters, alerts, reminders ----
+def _sb_cluster(row):
+    return _cluster_out({**row, "created_at": _ts(row["created_at"])})
+
+
+def _sb_alert(row):
+    return _alert_out({**row, "sent_at": _ts(row.get("sent_at"))})
+
+
+def _sb_find_similar_recent_reports(crop, suspected_issue, since_hours, lat, lng, radius_km):
+    cutoff = _iso_z(datetime.now(timezone.utc) - timedelta(hours=since_hours))
+    rows = (_sb().table("reports").select("*").eq("suspected_issue", suspected_issue)
+            .in_("confidence_band", ["medium", "high"]).gte("created_at", cutoff)
+            .order("created_at", desc=True).execute().data or [])
+    if not rows:
+        return []
+    farm_ids = list({r["farm_id"] for r in rows})
+    farms = _sb().table("farms").select("*").in_("id", farm_ids).execute().data or []
+    by_id = {f["id"]: f for f in farms}
+    out = []
+    for row in rows:
+        farm = by_id.get(row["farm_id"])
+        if farm is None or farm["crop"] != crop:
+            continue
+        if farm["lat"] is None or farm["lng"] is None:
+            continue
+        if _haversine_km(lat, lng, float(farm["lat"]), float(farm["lng"])) > radius_km:
+            continue
+        out.append({
+            "report_id": row["id"],
+            "farm_id": row["farm_id"],
+            "confidence_band": row["confidence_band"],
+            "created_at": _ts(row["created_at"]),
+            "lat": float(farm["lat"]),
+            "lng": float(farm["lng"]),
+            "area_label": farm["area_label"],
+            "suspected_issue": row["suspected_issue"],
+        })
+    return out
+
+
+def _sb_find_nearby_farms(crop, lat, lng, radius_km, exclude_farm_id):
+    farms = _sb().table("farms").select("*").eq("crop", crop).execute().data or []
+    farmer_ids = list({f["farmer_id"] for f in farms})
+    farmers = []
+    if farmer_ids:
+        farmers = _sb().table("farmers").select("*").in_("id", farmer_ids).execute().data or []
+    by_id = {f["id"]: f for f in farmers}
+    out = []
+    for farm in farms:
+        if farm["id"] == exclude_farm_id:
+            continue
+        if farm["lat"] is None or farm["lng"] is None:
+            continue
+        if _haversine_km(lat, lng, float(farm["lat"]), float(farm["lng"])) > radius_km:
+            continue
+        farmer = by_id.get(farm["farmer_id"])
+        out.append({
+            "farm_id": farm["id"],
+            "farmer_id": farm["farmer_id"],
+            "telegram_chat_id": farmer["telegram_chat_id"] if farmer else None,
+            "language": farmer["language"] if farmer else None,
+            "area_label": farm["area_label"],
+            "lat": float(farm["lat"]),
+            "lng": float(farm["lng"]),
+        })
+    return out
+
+
+def _sb_check_reports_exist(report_ids):
+    if not report_ids:
+        return
+    found = _sb().table("reports").select("id").in_("id", report_ids).execute().data or []
+    missing = set(report_ids) - {r["id"] for r in found}
+    if missing:
+        raise DBError("DB_ERROR", f"report not found: {sorted(missing)[0]}")
+
+
+def _sb_create_cluster(crop, suspected_issue, area_label, centroid_lat, centroid_lng, severity,
+                       unique_ids, window_hours, data_source):
+    _sb_check_reports_exist(unique_ids)
+    created = _sb().table("clusters").insert({
+        "crop": crop,
+        "suspected_issue": suspected_issue,
+        "area_label": area_label,
+        "centroid_lat": centroid_lat,
+        "centroid_lng": centroid_lng,
+        "severity": severity,
+        "report_count": len(unique_ids),
+        "window_hours": window_hours,
+        "data_source": data_source,
+    }).execute().data
+    cluster = created[0]
+    try:
+        _sb().table("cluster_reports").insert(
+            [{"cluster_id": cluster["id"], "report_id": rid} for rid in unique_ids]
+        ).execute()
+    except Exception:
+        _sb().table("clusters").delete().eq("id", cluster["id"]).execute()
+        raise
+    return _sb_cluster(cluster)
+
+
+def _sb_update_cluster(cluster_id, severity, report_count, unique_ids):
+    found = _sb().table("clusters").select("id").eq("id", cluster_id).limit(1).execute().data
+    if not found:
+        raise DBError("DB_ERROR", f"cluster not found: {cluster_id}")
+    _sb_check_reports_exist(unique_ids)
+    links = _sb().table("cluster_reports").select("report_id").eq("cluster_id", cluster_id).execute().data or []
+    linked = {link["report_id"] for link in links}
+    new_links = [{"cluster_id": cluster_id, "report_id": rid} for rid in unique_ids if rid not in linked]
+    if new_links:
+        _sb().table("cluster_reports").insert(new_links).execute()
+    updated = _sb().table("clusters").update(
+        {"severity": severity, "report_count": report_count}
+    ).eq("id", cluster_id).execute().data
+    return _sb_cluster(updated[0])
+
+
+def _sb_list_clusters():
+    rows = _sb().table("clusters").select("*").order("created_at", desc=True).execute().data or []
+    return [_sb_cluster(r) for r in rows]
+
+
+def _sb_get_cluster_detail(cluster_id):
+    rows = _sb().table("clusters").select("*").eq("id", cluster_id).limit(1).execute().data
+    if not rows:
+        return None
+    links = _sb().table("cluster_reports").select("report_id").eq("cluster_id", cluster_id).execute().data or []
+    report_ids = [link["report_id"] for link in links]
+    reports = []
+    if report_ids:
+        report_rows = (_sb().table("reports").select("*").in_("id", report_ids)
+                       .order("created_at").execute().data or [])
+        farm_ids = list({r["farm_id"] for r in report_rows})
+        farms = _sb().table("farms").select("id,crop,area_label").in_("id", farm_ids).execute().data or []
+        by_id = {f["id"]: f for f in farms}
+        for report in report_rows:
+            farm = by_id.get(report["farm_id"])
+            reports.append({
+                "report_id": report["id"],
+                "created_at": _ts(report["created_at"]),
+                "crop": farm["crop"] if farm else None,
+                "suspected_issue": report["suspected_issue"],
+                "confidence_band": report["confidence_band"],
+                "area_label": farm["area_label"] if farm else None,
+                "image_url": _safe_url(report["image_path"]),
+            })
+    alert_rows = _sb().table("alerts").select("*").eq("cluster_id", cluster_id).execute().data or []
+    return {
+        "cluster": _sb_cluster(rows[0]),
+        "reports": reports,
+        "alerts": [_sb_alert(a) for a in alert_rows],
+    }
+
+
+def _sb_insert_alert(cluster_id, farm_id, message, delivered, data_source):
+    if not _sb().table("clusters").select("id").eq("id", cluster_id).limit(1).execute().data:
+        raise DBError("DB_ERROR", f"cluster not found: {cluster_id}")
+    if not _sb().table("farms").select("id").eq("id", farm_id).limit(1).execute().data:
+        raise DBError("DB_ERROR", f"farm not found: {farm_id}")
+
+    def already_exists():
+        return bool(_sb().table("alerts").select("id").eq("cluster_id", cluster_id)
+                    .eq("farm_id", farm_id).limit(1).execute().data)
+
+    if already_exists():
+        return None
+    try:
+        created = _sb().table("alerts").insert({
+            "cluster_id": cluster_id,
+            "farm_id": farm_id,
+            "message": message,
+            "channel": "telegram",
+            "delivered": delivered,
+            "sent_at": _now_iso() if delivered else None,
+            "data_source": data_source,
+        }).execute().data
+    except Exception:
+        if already_exists():  # two requests raced: the unique (cluster, farm) rule caught the second
+            return None
+        raise
+    return _sb_alert(created[0])
+
+
+def _sb_reminder_out(row):
+    return {
+        "id": row["id"],
+        "report_id": row["report_id"],
+        "due_at": _ts(row["due_at"]),
+        "message": row["message"],
+        "sent": row["sent"],
+    }
+
+
+def _sb_insert_reminder(report_id, due, message):
+    if not _sb().table("reports").select("id").eq("id", report_id).limit(1).execute().data:
+        raise DBError("DB_ERROR", f"report not found: {report_id}")
+    created = _sb().table("reminders").insert({
+        "report_id": report_id,
+        "due_at": _iso_z(due),
+        "message": message,
+    }).execute().data
+    return _sb_reminder_out(created[0])
+
+
+def _sb_due_reminders(now):
+    rows = (_sb().table("reminders").select("*").eq("sent", False)
+            .lte("due_at", _iso_z(now)).order("due_at").execute().data or [])
+    if not rows:
+        return []
+    report_ids = list({r["report_id"] for r in rows})
+    reports = _sb().table("reports").select("id,farm_id").in_("id", report_ids).execute().data or []
+    farm_of_report = {r["id"]: r["farm_id"] for r in reports}
+    farm_ids = list(set(farm_of_report.values()))
+    farms = _sb().table("farms").select("id,farmer_id").in_("id", farm_ids).execute().data or [] if farm_ids else []
+    farmer_of_farm = {f["id"]: f["farmer_id"] for f in farms}
+    farmer_ids = list(set(farmer_of_farm.values()))
+    farmers = _sb().table("farmers").select("id,telegram_chat_id").in_("id", farmer_ids).execute().data or [] if farmer_ids else []
+    chat_of_farmer = {f["id"]: f["telegram_chat_id"] for f in farmers}
+    out = []
+    for row in rows:
+        item = _sb_reminder_out(row)
+        farm_id = farm_of_report.get(row["report_id"])
+        farmer_id = farmer_of_farm.get(farm_id)
+        item["telegram_chat_id"] = chat_of_farmer.get(farmer_id)
+        out.append(item)
+    return out
+
+
+def _sb_mark_reminder_sent(reminder_id):
+    updated = _sb().table("reminders").update(
+        {"sent": True, "sent_at": _now_iso()}
+    ).eq("id", reminder_id).execute().data
+    if not updated:
+        raise DBError("DB_ERROR", f"reminder not found: {reminder_id}")
+    return None

@@ -3,70 +3,386 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>KhetLoop API Test</title>
+  <title>KhetLoop | Agricultural Intelligence</title>
+  <meta name="description" content="KhetLoop connects crop-health reports to farm memory, community early warnings and human expert review." />
+  <link rel="icon" type="image/png" href="assets/img/logo-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/config.js"></script>
+  <script src="js/constants.js"></script>
+  <script src="js/ui.js"></script>
+
   <style>
-    body { margin:0; padding:32px; background:#08110c; color:#eef3ea; font-family:Consolas,monospace; font-size:14px; }
-    h1 { font-family:Georgia,serif; color:#a3d65c; }
-    .pass { color:#a3d65c; } .fail { color:#ff7b7b; }
-    pre { white-space:pre-wrap; }
+    /* ---------- Landing page only ---------- */
+    .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; padding: calc(var(--nav-h) + 36px) 0 36px; }
+    .hero-bg {
+      position: absolute; inset: -8% 0; will-change: transform;
+      background: url("assets/img/hero.jpg") center / cover no-repeat, linear-gradient(135deg, #14301f, #08110c);
+    }
+    .hero-shade {
+      position: absolute; inset: 0;
+      background:
+        linear-gradient(90deg, rgba(8, 17, 12, .93) 0%, rgba(8, 17, 12, .7) 40%, rgba(8, 17, 12, .18) 78%),
+        linear-gradient(0deg, var(--bg) 0%, rgba(8, 17, 12, 0) 30%);
+    }
+    .hero-inner { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; }
+    .hero-main { flex: 1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 440px); gap: 56px; align-items: center; padding: 24px 0; }
+    .hero-copy { display: grid; gap: 24px; justify-items: start; }
+    .hero-copy h1 { font-size: clamp(46px, 7vw, 92px); line-height: 1.02; }
+    .hero-copy h1 em { display: block; font-style: normal; color: var(--lime); }
+    .hero-copy > p { max-width: 520px; font-size: 17px; color: #c9d4cc; }
+    .hero-copy > * { animation: rise .9s var(--ease) both; }
+    .hero-copy > *:nth-child(2) { animation-delay: .12s; }
+    .hero-copy > *:nth-child(3) { animation-delay: .24s; }
+    .hero-copy > *:nth-child(4) { animation-delay: .36s; }
+    .hero-panel { animation: rise 1s .3s var(--ease) both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+
+    .panel {
+      padding: 24px; border-radius: var(--radius-lg);
+      background: rgba(10, 20, 14, .62);
+      -webkit-backdrop-filter: blur(20px) saturate(140%); backdrop-filter: blur(20px) saturate(140%);
+      border: 1px solid var(--border-strong); box-shadow: var(--shadow);
+    }
+    .panel h3 { font-size: 30px; }
+    .panel-head { display: grid; gap: 4px; margin-bottom: 16px; }
+    .farm-list { display: grid; gap: 8px; max-height: 232px; overflow-y: auto; padding-right: 4px; }
+    .farm-opt {
+      display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 12px; text-align: left;
+      border-radius: 14px; border: 1px solid var(--border); background: rgba(255, 255, 255, .03);
+      color: var(--text); font: inherit; cursor: pointer;
+      transition: border-color .25s, background .25s, transform .25s var(--ease);
+    }
+    .farm-opt:hover { border-color: var(--border-strong); background: rgba(163, 214, 92, .07); transform: translateX(3px); }
+    .farm-opt.on { border-color: var(--lime); background: rgba(163, 214, 92, .1); box-shadow: inset 0 0 0 1px var(--lime); }
+    .farm-av { flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: var(--lime); background: rgba(163, 214, 92, .14); }
+    .farm-txt { display: grid; flex: 1; min-width: 0; }
+    .farm-txt strong { font-weight: 600; font-size: 14.5px; }
+    .farm-txt small { color: var(--muted); font-size: 12.5px; }
+    .farm-detail { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); display: grid; gap: 14px; }
+    .kv { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+    .kv span { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+    .kv b { font-weight: 600; }
+    .panel-note { font-size: 12.5px; color: var(--faint); }
+
+    .hero-stats { margin-top: 28px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-radius: 22px; overflow: hidden;
+      background: rgba(10, 20, 14, .62); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); border: 1px solid var(--border); animation: rise 1s .5s var(--ease) both; }
+    .stat { padding: 22px 26px; display: grid; gap: 2px; border-left: 1px solid var(--border); }
+    .stat:first-child { border-left: 0; }
+    .stat b { font-family: var(--font-display); font-size: 46px; font-weight: 600; line-height: 1; color: var(--lime); }
+    .stat span { font-size: 13px; color: var(--muted); }
+    .hero-foot { margin-top: 12px; font-size: 12.5px; color: var(--faint); min-height: 18px; }
+
+    .steps .card { display: grid; gap: 10px; align-content: start; }
+    .step-n { font-family: var(--font-display); font-size: 54px; line-height: 1; color: var(--lime); opacity: .85; }
+    .steps h3 { font-size: 28px; }
+
+    .honest { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: center; }
+    .honest-img { position: relative; min-height: 440px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-strong);
+      background: url("assets/img/leaf-macro.jpg") center / cover no-repeat, linear-gradient(135deg, #14301f, #08110c); box-shadow: var(--shadow); }
+    .honest-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(8, 17, 12, .85), transparent 55%); }
+    .honest-tag { position: absolute; z-index: 2; left: 20px; right: 20px; bottom: 20px; padding: 14px 18px; border-radius: 14px; background: rgba(8, 17, 12, .75); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid var(--border-strong); font-size: 14px; }
+    .checks { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 14px; }
+    .checks li { display: flex; gap: 14px; align-items: flex-start; color: #cfd9d2; }
+    .checks li::before { content: ""; flex: none; margin-top: 4px; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--lime); background: rgba(163, 214, 92, .14) radial-gradient(circle, var(--lime) 0 3px, transparent 4px); }
+
+    .tile { position: relative; isolation: isolate; min-height: 360px; display: flex; align-items: flex-end; padding: 28px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); color: var(--text); background: var(--surface-2); transition: transform .35s var(--ease), border-color .35s, box-shadow .35s; }
+    .tile:hover { transform: translateY(-8px); border-color: var(--border-strong); box-shadow: 0 34px 60px -28px rgba(0, 0, 0, .9); }
+    .tile-bg { position: absolute; inset: 0; z-index: -2; background-size: cover; background-position: center; transition: transform 1.2s var(--ease); }
+    .tile:hover .tile-bg { transform: scale(1.09); }
+    .tile::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(8, 17, 12, .96), rgba(8, 17, 12, .35) 62%, rgba(8, 17, 12, .55)); }
+    .tile h3 { font-size: 34px; margin: 6px 0; }
+    .tile p { color: #c4cfc7; font-size: 14.5px; max-width: 320px; }
+    .tile .go { margin-top: 14px; display: inline-flex; gap: 8px; align-items: center; color: var(--lime); font-weight: 600; font-size: 14px; }
+    .tile .go span { transition: transform .25s var(--ease); }
+    .tile:hover .go span { transform: translateX(6px); }
+
+    .source-card { display: grid; gap: 12px; align-content: start; }
+
+    .cta { position: relative; overflow: hidden; isolation: isolate; border-radius: var(--radius-lg); padding: 64px 48px; border: 1px solid var(--border-strong); text-align: center; display: grid; gap: 20px; justify-items: center; }
+    .cta-bg { position: absolute; inset: 0; z-index: -2; background: url("assets/img/hero.jpg") center 30% / cover no-repeat, linear-gradient(135deg, #14301f, #08110c); }
+    .cta::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(8, 17, 12, .78), rgba(8, 17, 12, .9)); }
+    .cta p { max-width: 560px; color: #c9d4cc; }
+
+    @media (max-width: 980px) {
+      .hero-main { grid-template-columns: 1fr; gap: 36px; }
+      .hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .stat:nth-child(3) { border-left: 0; }
+      .stat:nth-child(n+3) { border-top: 1px solid var(--border); }
+      .honest { grid-template-columns: 1fr; }
+      .honest-img { min-height: 320px; }
+    }
+    @media (max-width: 680px) {
+      .stat { padding: 16px 18px; } .stat b { font-size: 36px; }
+      .cta { padding: 44px 24px; }
+    }
   </style>
 </head>
 <body>
-  <h1>KhetLoop API test (USE_MOCK must be true)</h1>
-  <pre id="out">Running...</pre>
 
-  <script src="js/config.js"></script>
-  <script src="js/constants.js"></script>
+  <section class="hero" id="top">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="hero-shade"></div>
+
+    <div class="container hero-inner">
+      <div class="hero-main">
+        <div class="hero-copy">
+          <span class="eyebrow">Voice-first agricultural intelligence</span>
+          <h1>Listening to every leaf.<em>Warning every farm.</em></h1>
+          <p>A Kannada or Hindi voice note and a leaf photo become a preliminary assessment, a lasting farm memory, an expert review and an early signal for neighbouring farms.</p>
+          <div class="row">
+            <a class="btn btn-primary" href="dashboard.html">Open expert dashboard <span class="arrow">&rarr;</span></a>
+            <a class="btn btn-ghost" href="radar.html">Community radar</a>
+          </div>
+        </div>
+
+        <aside class="panel hero-panel" id="farmPanel" aria-label="Farm selector">
+          <div class="panel-head">
+            <h3>Choose your farm</h3>
+            <p class="muted">Select a farm to open its report history.</p>
+          </div>
+          <div id="farmList" class="farm-list"></div>
+          <div id="farmDetail" class="farm-detail" hidden></div>
+        </aside>
+      </div>
+
+      <div class="hero-stats" id="stats">
+        <div class="stat"><b id="stFarms">&mdash;</b><span>Farms registered</span></div>
+        <div class="stat"><b id="stReports">&mdash;</b><span>Reports on record</span></div>
+        <div class="stat"><b id="stPending">&mdash;</b><span>Awaiting expert review</span></div>
+        <div class="stat"><b id="stClusters">&mdash;</b><span>Potential clusters</span></div>
+      </div>
+      <div class="hero-foot" id="heroFoot"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">How it works</span>
+        <h2>From a single leaf to a connected community</h2>
+        <p class="muted">Every report moves through the same transparent loop, and every step is recorded.</p>
+      </div>
+      <div class="grid grid-3 steps">
+        <div class="card card-hover spot reveal"><div class="step-n">01</div><h3>Report</h3><p class="muted">The farmer sends a Kannada or Hindi voice note and a leaf photo on Telegram. No app to install.</p></div>
+        <div class="card card-hover spot reveal" style="--d:90ms"><div class="step-n">02</div><h3>Assess</h3><p class="muted">AI gives a preliminary result with a confidence band, or asks for a clearer photo when it is unsure.</p></div>
+        <div class="card card-hover spot reveal" style="--d:180ms"><div class="step-n">03</div><h3>Remember</h3><p class="muted">The report joins the farm&rsquo;s timeline together with the weather context at that moment.</p></div>
+        <div class="card card-hover spot reveal"><div class="step-n">04</div><h3>Escalate</h3><p class="muted">Rules, not the AI, send unclear or concerning cases to an agricultural expert with full context.</p></div>
+        <div class="card card-hover spot reveal" style="--d:90ms"><div class="step-n">05</div><h3>Warn</h3><p class="muted">Similar nearby reports can form a potential cluster and trigger a cautious early-warning message.</p></div>
+        <div class="card card-hover spot reveal" style="--d:180ms"><div class="step-n">06</div><h3>Follow up</h3><p class="muted">Reminders collect new observations over time, so the farm&rsquo;s story keeps growing.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container honest">
+      <div class="honest-img reveal">
+        <div class="honest-tag"><b>Preliminary assessment.</b> <span class="muted">Not a confirmed diagnosis. Confidence is reported by the model and is not calibrated.</span></div>
+      </div>
+      <div class="reveal" style="--d:120ms">
+        <span class="eyebrow">Honest by design</span>
+        <h2 style="margin:14px 0 8px">AI that knows when to stay quiet</h2>
+        <p class="muted">KhetLoop supports experts instead of replacing them, and it shows its reasoning on every report.</p>
+        <ul class="checks">
+          <li>Abstains when the evidence is weak and asks for a clearer photo.</li>
+          <li>Rules decide when to escalate or flag a potential cluster, not the language model.</li>
+          <li>Never prescribes pesticide names or dosages.</li>
+          <li>The status changes to Expert Reviewed only when a human replies.</li>
+          <li>Every report explains itself with &ldquo;Why am I seeing this?&rdquo;.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Explore the platform</span>
+        <h2>Three views, one connected loop</h2>
+      </div>
+      <div class="grid grid-3">
+        <a class="tile card-hover reveal" href="dashboard.html">
+          <div class="tile-bg" style="background-image:url('assets/img/farm-card.jpg')"></div>
+          <div><span class="eyebrow">For experts</span><h3>Expert dashboard</h3><p>Open a case with the photo, weather and AI findings, then send verified guidance.</p><span class="go">Open dashboard <span>&rarr;</span></span></div>
+        </a>
+        <a class="tile card-hover reveal" style="--d:100ms" href="radar.html">
+          <div class="tile-bg" style="background-image:url('assets/img/aerial-farms.jpg')"></div>
+          <div><span class="eyebrow">Early warning</span><h3>Community radar</h3><p>Potential clusters on a map. Only coarse areas are shown, never individual farms.</p><span class="go">Open radar <span>&rarr;</span></span></div>
+        </a>
+        <a class="tile card-hover reveal" style="--d:200ms" href="#farmPanel" id="tlTile">
+          <div class="tile-bg" style="background-image:url('assets/img/farm-hands.jpg')"></div>
+          <div><span class="eyebrow">Farm memory</span><h3>Farm timeline</h3><p id="tlTileText">Choose a farm above to see its full history of reports and expert guidance.</p><span class="go">Open timeline <span>&rarr;</span></span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">Transparent data</span>
+        <h2>Every number says where it came from</h2>
+        <p class="muted">Each record on KhetLoop carries one of four labels. Demo data is always marked simulated.</p>
+      </div>
+      <div class="grid grid-4" id="sources"></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:20px">
+    <div class="container">
+      <div class="cta reveal">
+        <div class="cta-bg"></div>
+        <h2>See the whole loop in action</h2>
+        <p>Review a case as an expert, then watch the community radar for similar signals nearby.</p>
+        <div class="row" style="justify-content:center">
+          <a class="btn btn-primary" href="dashboard.html">Review a case <span class="arrow">&rarr;</span></a>
+          <a class="btn btn-ghost" href="radar.html">View the radar</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script src="js/api.js"></script>
+  <script src="js/components/dataSourceBadge.js"></script>
   <script>
-    (async function () {
-      var out = document.getElementById("out");
-      out.innerHTML = "";
-      var failures = 0;
+    UI.mountNavbar("home");
+    UI.mountFooter();
 
-      // expectCode = null means the call should succeed
-      function check(name, res, expectCode) {
-        var pass = expectCode ? (!res.ok && res.error.code === expectCode) : res.ok;
-        if (!pass) failures++;
-        var detail = res.ok ? "ok" : (res.error.code + ": " + res.error.message);
-        out.innerHTML += '<span class="' + (pass ? "pass" : "fail") + '">' +
-          (pass ? "PASS " : "FAIL ") + name + (expectCode ? " (expects " + expectCode + ")" : "") +
-          "</span>  -> " + detail + "\n";
+    /* ---------- data-source explainer ---------- */
+    (function () {
+      var texts = {
+        live: "Fetched live from the service at the time of the request.",
+        cached: "The last saved result, used when the live service was not available.",
+        simulated: "Demo data. It does not come from real farms.",
+        unverified: "The source of this record could not be verified."
+      };
+      document.getElementById("sources").innerHTML = DATA_SOURCES.map(function (s, i) {
+        return '<div class="card card-hover spot source-card reveal" style="--d:' + (i * 80) + 'ms">' +
+          dataSourceBadge(s) + '<p class="muted">' + UI.esc(texts[s]) + "</p></div>";
+      }).join("");
+    })();
+
+    /* ---------- hero parallax ---------- */
+    (function () {
+      var bg = document.getElementById("heroBg");
+      if (!bg || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+      var ticking = false;
+      window.addEventListener("scroll", function () {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          var y = Math.min(window.scrollY, 900);
+          bg.style.transform = "translate3d(0," + (y * 0.22).toFixed(1) + "px,0) scale(1.06)";
+          ticking = false;
+        });
+      }, { passive: true });
+    })();
+
+    /* ---------- farm picker and stats ---------- */
+    var farmList = document.getElementById("farmList");
+    var farmDetail = document.getElementById("farmDetail");
+    var farms = [];
+    var selectedId = null;
+
+    function renderFarmList() {
+      farmList.removeAttribute("aria-busy");
+      farmList.innerHTML = farms.map(function (f) {
+        var on = f.id === selectedId;
+        return '<button type="button" class="farm-opt' + (on ? " on" : "") + '" data-id="' + UI.esc(f.id) + '" aria-pressed="' + on + '">' +
+          '<span class="farm-av">' + UI.esc((f.farmer_name || "?").charAt(0).toUpperCase()) + "</span>" +
+          '<span class="farm-txt"><strong>' + UI.esc(f.farmer_name || "Unnamed farmer") + "</strong>" +
+          "<small>" + UI.esc(UI.label(CROP_LABELS, f.crop)) + " \u00b7 " + UI.esc(f.area_label || "Area not set") + "</small></span>" +
+          dataSourceBadge(f.data_source) + "</button>";
+      }).join("");
+    }
+
+    function renderFarmDetail() {
+      var f = null;
+      for (var i = 0; i < farms.length; i++) if (farms[i].id === selectedId) f = farms[i];
+      if (!f) { farmDetail.hidden = true; return; }
+      var count = (typeof f.report_count === "number") ? f.report_count : "\u2014";
+      farmDetail.hidden = false;
+      farmDetail.innerHTML =
+        '<div class="row between"><strong style="font-family:var(--font-display);font-size:24px;font-weight:600">' + UI.esc(f.farmer_name || "Unnamed farmer") + "</strong>" +
+        dataSourceBadge(f.data_source) + "</div>" +
+        '<div class="kv">' +
+        "<div><span>Crop</span><b>" + UI.esc(UI.label(CROP_LABELS, f.crop)) + "</b></div>" +
+        "<div><span>Area</span><b>" + UI.esc(f.area_label || "Not set") + "</b></div>" +
+        "<div><span>Language</span><b>" + UI.esc(UI.label(LANGUAGE_LABELS, f.language)) + "</b></div>" +
+        "<div><span>Reports</span><b>" + UI.esc(count) + "</b></div></div>" +
+        '<a class="btn btn-primary" href="timeline.html?farm_id=' + encodeURIComponent(f.id) + '">Open farm timeline <span class="arrow">&rarr;</span></a>' +
+        '<p class="panel-note">Sowing date and the full report history are on the timeline page.</p>';
+
+      var tile = document.getElementById("tlTile");
+      tile.setAttribute("href", "timeline.html?farm_id=" + encodeURIComponent(f.id));
+      document.getElementById("tlTileText").textContent =
+        "Open the full history for " + (f.farmer_name || "this farm") + "\u2019s " + UI.label(CROP_LABELS, f.crop).toLowerCase() + " farm.";
+    }
+
+    farmList.addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest(".farm-opt") : null;
+      if (!b) return;
+      selectedId = b.getAttribute("data-id");
+      renderFarmList();
+      renderFarmDetail();
+    });
+
+    function setStat(id, res, pick, opts) {
+      var el = document.getElementById(id);
+      if (res && res.ok) {
+        var v = pick(res.data);
+        if (typeof v === "number" && isFinite(v)) { UI.animateNumber(el, v, opts); return; }
+      }
+      el.textContent = "\u2014";
+      el.title = (res && !res.ok) ? res.error.message : "Not available";
+    }
+
+    async function load() {
+      UI.showLoading(farmList, "lines", 4);
+      farmDetail.hidden = true;
+
+      var results = await Promise.all([
+        listFarms(),
+        listExpertCases("expert_review_pending"),
+        getClusters()
+      ]);
+      var farmsRes = results[0], casesRes = results[1], clustersRes = results[2];
+
+      /* farm picker */
+      if (!farmsRes.ok) {
+        UI.showError(farmList, farmsRes.error, load);
+      } else {
+        farms = Array.isArray(farmsRes.data.farms) ? farmsRes.data.farms : [];
+        if (farms.length === 0) {
+          UI.showEmpty(farmList, "No farms yet", "Farms appear here after a farmer registers on Telegram.");
+        } else {
+          selectedId = farms[0].id;
+          renderFarmList();
+          renderFarmDetail();
+        }
       }
 
-      check("listFarms", await listFarms(), null);
-      check("getReport escalated", await getReport("rep_a1b2c3d4"), null);
-      check("getReport preliminary", await getReport("rep_b2c3d4e5"), null);
-      check("getReport abstain", await getReport("rep_c3d4e5f6"), null);
-      check("getReport expert reviewed", await getReport("rep_d4e5f6a7"), null);
-      check("getReport unknown id", await getReport("rep_00000000"), "NOT_FOUND");
-      check("getFarmTimeline", await getFarmTimeline("farm_4a5b6c7d"), null);
-      check("listExpertCases", await listExpertCases("expert_review_pending"), null);
-      check("submitReview missing guidance", await submitReview("rep_a1b2c3d4", { expert_name: "Demo Expert" }), "INVALID_REQUEST");
-      check("submitReview valid", await submitReview("rep_a1b2c3d4", {
-        expert_name: "Demo Expert",
-        guidance: "Remove affected leaves and monitor the plant.",
-        confirmed_issue: "early_blight"
-      }), null);
-      check("submitReview again", await submitReview("rep_a1b2c3d4", {
-        expert_name: "Demo Expert", guidance: "Again", confirmed_issue: null
-      }), "CONFLICT");
-      check("getClusters", await getClusters(), null);
-      check("getClusterDetail", await getClusterDetail("clu_1a2b3c4d"), null);
-      check("runReminders", await runReminders(), null);
-      check("simulateCluster", await simulateCluster({ crop: "tomato", suspected_issue: "early_blight", area_label: "Kolar North", target_farm_id: "farm_4a5b6c7d" }), null);
-      check("getHealth", await getHealth(), null);
+      /* stats */
+      setStat("stFarms", farmsRes, function (d) { return Array.isArray(d.farms) ? d.farms.length : NaN; });
+      setStat("stReports", farmsRes, function (d) {
+        if (!Array.isArray(d.farms)) return NaN;
+        return d.farms.reduce(function (sum, f) { return sum + (Number(f.report_count) || 0); }, 0);
+      });
+      setStat("stPending", casesRes, function (d) {
+        return typeof d.count === "number" ? d.count : (Array.isArray(d.cases) ? d.cases.length : NaN);
+      });
+      setStat("stClusters", clustersRes, function (d) { return Array.isArray(d.clusters) ? d.clusters.length : NaN; });
 
-      var fd = new FormData();
-      fd.append("farm_id", "farm_4a5b6c7d");
-      check("submitReport without image", await submitReport(fd), "INVALID_REQUEST");
-      fd.append("image", new Blob(["x"], { type: "image/jpeg" }), "test.jpg");
-      check("submitReport with image", await submitReport(fd), null);
+      var foot = [];
+      foot.push(USE_MOCK ? "Showing mock data." : "Showing live API data.");
+      if (!casesRes.ok) foot.push("Expert queue count unavailable: " + casesRes.error.message);
+      if (clustersRes.ok && clustersRes.data.has_simulated) foot.push("Cluster count includes simulated demo data.");
+      document.getElementById("heroFoot").textContent = foot.join(" ");
+    }
 
-      out.innerHTML += "\n" + (failures === 0
-        ? '<span class="pass">ALL CHECKS PASSED</span>'
-        : '<span class="fail">' + failures + " CHECK(S) FAILED</span>");
-    })();
+    load();
   </script>
 </body>
 </html>

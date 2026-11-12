@@ -3,4 +3,8 @@ flask-cors>=4.0
 requests>=2.31
 python-dotenv>=1.0
 pytest>=8.0
+<<<<<<< HEAD
 pillow>=10.0
+=======
+gTTS>=2.5
+>>>>>>> origin/feature/integrations

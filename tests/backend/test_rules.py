@@ -254,3 +254,19 @@ def test_any_simulated_member_makes_the_cluster_simulated():
 def test_centroid_is_rounded_to_two_decimals():
     c = check_cluster(NEW, FakeDB([R(1), R(2)]))["cluster"]
     assert c["centroid_lat"] == round(c["centroid_lat"], 2) and c["centroid_lng"] == round(c["centroid_lng"], 2)
+
+
+
+def test_spread_stems_match_common_spellings_and_inflections():
+    for words in ("ಎಲೆಗಳು ಹರಡುತ್ತಿವೆ", "ಹರಡಿದೆ", "पत्ते फैल रहे हैं", "फैला हुआ है"):
+        assert has_severity_keyword(words), words
+
+
+def test_bare_field_words_do_not_trigger_severity():
+    for words in ("ನನ್ನ ಹೊಲದಲ್ಲಿ ಟೊಮೇಟೊ ಗಿಡ", "मेरे खेत में टमाटर है"):
+        assert not has_severity_keyword(words), words
+
+
+def test_missing_data_source_makes_the_cluster_unverified():
+    res = check_cluster(NEW, FakeDB([R(1, ds=None), R(2, ds=None)]))
+    assert res["cluster"]["data_source"] == "unverified"

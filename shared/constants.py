@@ -20,15 +20,8 @@ HIGH_RISK_ISSUES = ["late_blight"]
 # English:
 SEVERITY_KEYWORDS = ["spreading", "whole field", "many plants", "dying", "all plants"]
 # Kannada (spreading, whole field/farm, many plants, dying/drying, all plants):
-SEVERITY_KEYWORDS_KN = [
-    "ಹರಡುತ್ತಿದೆ", "ಹರಡುತ್ತಿವೆ", "ಇಡೀ ಹೊಲ", "ಇಡೀ ತೋಟ", "ಹಲವು ಗಿಡ", "ಹಲವಾರು ಗಿಡ",
-    "ಸಾಯುತ್ತಿದೆ", "ಸಾಯುತ್ತಿವೆ", "ಒಣಗುತ್ತಿವೆ", "ಎಲ್ಲಾ ಗಿಡ",
-]
-# Hindi (spreading, whole field, many plants, drying/dying, all plants):
-SEVERITY_KEYWORDS_HI = [
-    "फैल रहा", "फैल रही", "फैल रहे", "पूरा खेत", "पूरे खेत", "कई पौधे", "बहुत पौधे",
-    "सूख रहे", "मर रहे", "सभी पौधे", "सारे पौधे",
-]
+SEVERITY_KEYWORDS_KN = ["ಹರಡ", "ಇಡೀ ಹೊಲ", "ಇಡೀ ತೋಟ", "ಹಲವು ಗಿಡ", "ಹಲವಾರು ಗಿಡ", "ಸಾಯುತ್ತಿ", "ಒಣಗುತ್ತಿ", "ಎಲ್ಲಾ ಗಿಡ"]
+SEVERITY_KEYWORDS_HI = ["फैल", "पूरा खेत", "पूरे खेत", "कई पौधे", "बहुत पौधे", "सूख रहे", "मर रहे", "सभी पौधे", "सारे पौधे"]
 
 DATA_SOURCES = ["live", "cached", "simulated", "unverified"]
 CLUSTER_SEVERITIES = ["watch", "elevated"]

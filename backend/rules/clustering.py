@@ -43,6 +43,15 @@ def _parse_iso(value):
     except (ValueError, TypeError):
         return None
 
+def _cluster_data_source(members) -> str:
+    """Honest labelling: 'live' only if EVERY member report is live; 'simulated' if any is simulated;
+    anything else (missing or unknown labels) is 'unverified'."""
+    sources = {m.get("data_source") for m in members}
+    if sources == {"live"}:
+        return "live"
+    if "simulated" in sources:
+        return "simulated"
+    return "unverified"
 
 def _default_db():
     from database import db_client  # P2's module; imported lazily so tests do not need it
@@ -97,8 +106,7 @@ def check_cluster(report: dict, db=None):
     report_ids = [m["report_id"] for m in members]
     area_label = report.get("area_label") or next(
         (m["area_label"] for m in members if m.get("area_label")), "your area")
-    # Honest labelling: any simulated member makes the whole cluster 'simulated'.
-    data_source = "simulated" if any(m.get("data_source") == "simulated" for m in members) else "live"
+    data_source = _cluster_data_source(members)
 
     # Reuse an existing nearby cluster (same crop and issue, inside the time window).
     cutoff = datetime.now(timezone.utc) - timedelta(hours=RADAR_TIME_WINDOW_HOURS)

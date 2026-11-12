@@ -55,7 +55,7 @@ class Config:
     APP_PORT = _get_int("APP_PORT", 5000)
 
     # Integrations (P4)
-    SPEECH_PROVIDER = os.getenv("SPEECH_PROVIDER", "gemini_gtts")
+    SPEECH_PROVIDER = os.getenv("SPEECH_PROVIDER", "groq_gtts")
     TMP_DIR = _get_tmp_dir()
 
     @classmethod

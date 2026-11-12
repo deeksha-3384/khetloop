@@ -302,3 +302,41 @@ body.has-cursor select { cursor: pointer; }
   .tl-step::before { transform: scaleY(1); }
   .js .reveal { opacity: 1; transform: none; }
 }
+/* ---------- Custom dropdown (built by UI.enhanceSelect) ---------- */
+.dd { position: relative; width: 100%; }
+.dd-native { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden; clip: rect(0 0 0 0); }
+.dd-btn {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 12px 14px; text-align: left; color: var(--text); font: 400 14px var(--font-ui);
+  background: rgba(255, 255, 255, .035); border: 1px solid var(--border); border-radius: 12px; outline: none; cursor: pointer;
+  transition: border-color .25s, box-shadow .25s, background .25s, transform .2s var(--ease);
+}
+.dd-btn:hover { border-color: var(--border-strong); background: rgba(163, 214, 92, .06); }
+.dd-btn:active { transform: scale(.985); }
+.dd-btn:focus-visible, .dd.open .dd-btn { border-color: var(--lime); box-shadow: 0 0 0 4px rgba(163, 214, 92, .12); background: rgba(255, 255, 255, .05); }
+.dd-val { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dd-chev { flex: none; width: 16px; height: 16px; color: var(--lime); transition: transform .3s var(--ease); }
+.dd.open .dd-chev { transform: rotate(180deg); }
+
+.dd-menu {
+  position: fixed; z-index: 300; padding: 6px; overflow-y: auto; overscroll-behavior: contain;
+  background: rgba(12, 24, 17, .94); -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--border-strong); border-radius: 16px;
+  box-shadow: 0 28px 60px -18px rgba(0, 0, 0, .9), 0 0 0 1px rgba(163, 214, 92, .05);
+  opacity: 0; transform: translateY(-8px) scale(.96); transform-origin: top center; pointer-events: none;
+  transition: opacity .2s ease, transform .25s var(--ease);
+}
+.dd-menu.up { transform-origin: bottom center; transform: translateY(8px) scale(.96); }
+.dd-menu.in { opacity: 1; transform: none; pointer-events: auto; }
+.dd-menu::-webkit-scrollbar { width: 6px; }
+.dd-opt {
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 12px; border: 0; border-radius: 10px; background: transparent; color: var(--text);
+  font: 400 14px var(--font-ui); text-align: left; cursor: pointer;
+  transition: background .2s, color .2s, transform .2s var(--ease);
+}
+.dd-opt + .dd-opt { margin-top: 2px; }
+.dd-opt.is-active { background: rgba(163, 214, 92, .13); transform: translateX(3px); }
+.dd-opt.is-sel { color: var(--lime); font-weight: 600; }
+.dd-check { flex: none; width: 15px; height: 15px; opacity: 0; transform: scale(.6); transition: opacity .2s, transform .25s var(--ease); }
+.dd-opt.is-sel .dd-check { opacity: 1; transform: none; }

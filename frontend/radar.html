@@ -98,6 +98,24 @@
 
       <div id="simBanner" class="banner-sim" style="margin-bottom:22px" hidden>SIMULATED DATA <span>This map includes demo clusters. They do not come from real farms.</span></div>
 
+
+            <div id="demoPanel" class="card" style="margin-bottom:22px" hidden>
+        <div class="row between">
+          <div class="card-title" style="margin:0">Demo controls</div>
+          <span class="badge badge-simulated"><i class="badge-dot"></i>Simulated</span>
+        </div>
+        <p class="small" style="margin-top:6px">Creates 3 simulated reports from 3 simulated farms, runs the real cluster check, and sends the alert to the chosen farm&rsquo;s Telegram chat.</p>
+        <div class="grid grid-3" style="margin-top:14px">
+          <div class="field"><label for="demoFarm">Farm that receives the alert</label><select class="select" id="demoFarm"></select></div>
+          <div class="field"><label for="demoIssue">Suspected issue</label><select class="select" id="demoIssue"></select></div>
+          <div class="field"><label for="demoArea">Area label</label><input class="input" id="demoArea" value="Kolar North" maxlength="60" autocomplete="off" /></div>
+        </div>
+        <div class="row" style="margin-top:16px">
+          <button type="button" class="btn btn-primary" id="demoCreate">Create demo cluster <span class="arrow">&rarr;</span></button>
+          <button type="button" class="btn btn-ghost" id="demoRemind">Send due reminders</button>
+          <span class="small" id="demoMsg" role="status"></span>
+        </div>
+      </div>
       <div class="stats3">
         <div class="card stat-card"><b id="sClusters">&mdash;</b><span>Potential clusters</span></div>
         <div class="card stat-card"><b id="sElevated">&mdash;</b><span>At elevated severity</span></div>
@@ -321,6 +339,69 @@
       }
     }
 
+        /* ---------- demo controls (only with ?demo=1) ---------- */
+    (function () {
+      if (UI.getParam("demo") !== "1") return;
+      var panel = document.getElementById("demoPanel");
+      var farmSel = document.getElementById("demoFarm");
+      var issueSel = document.getElementById("demoIssue");
+      var areaIn = document.getElementById("demoArea");
+      var createBtn = document.getElementById("demoCreate");
+      var remindBtn = document.getElementById("demoRemind");
+      var msg = document.getElementById("demoMsg");
+      var demoFarms = [];
+      panel.hidden = false;
+
+      issueSel.innerHTML = ISSUES.filter(function (i) { return i !== "healthy" && i !== "unknown"; }).map(function (i) {
+        return '<option value="' + UI.esc(i) + '"' + (i === "early_blight" ? " selected" : "") + ">" + UI.esc(UI.label(ISSUE_LABELS, i)) + "</option>";
+      }).join("");
+
+      listFarms().then(function (r) {
+        if (!r.ok) { msg.textContent = "Could not load farms: " + r.error.message; createBtn.disabled = true; return; }
+        demoFarms = Array.isArray(r.data.farms) ? r.data.farms : [];
+        if (!demoFarms.length) { msg.textContent = "No farms available to receive an alert."; createBtn.disabled = true; return; }
+        farmSel.innerHTML = demoFarms.map(function (f) {
+          return '<option value="' + UI.esc(f.id) + '">' + UI.esc((f.farmer_name || "Unnamed farmer") + " \u00b7 " + UI.label(CROP_LABELS, f.crop) + " \u00b7 " + (f.area_label || "Area not set")) + "</option>";
+        }).join("");
+        var first = demoFarms[0];
+        if (first.area_label) areaIn.value = first.area_label;
+        farmSel.dispatchEvent(new Event("change"));
+      });
+      issueSel.dispatchEvent(new Event("change"));
+
+      farmSel.addEventListener("change", function () {
+        for (var i = 0; i < demoFarms.length; i++) {
+          if (demoFarms[i].id === farmSel.value && demoFarms[i].area_label) areaIn.value = demoFarms[i].area_label;
+        }
+      });
+
+      createBtn.addEventListener("click", async function () {
+        var farm = null;
+        for (var i = 0; i < demoFarms.length; i++) if (demoFarms[i].id === farmSel.value) farm = demoFarms[i];
+        var area = areaIn.value.trim();
+        if (!farm || !area) { msg.textContent = "Choose a farm and enter an area label."; return; }
+        createBtn.disabled = true; msg.textContent = "Creating demo cluster\u2026";
+        var res = await simulateCluster({
+          crop: farm.crop, suspected_issue: issueSel.value, area_label: area, target_farm_id: farm.id
+        });
+        createBtn.disabled = false;
+        if (!res.ok) { msg.textContent = ""; UI.toast(res.error.message, "error"); return; }
+        var sent = res.data.alerts_sent;
+        msg.textContent = "Created. Alerts sent: " + sent + ".";
+        UI.toast("Demo cluster created. Alerts sent: " + sent, "success");
+        await load();
+        if (res.data.cluster && clusters.some(function (c) { return c.id === res.data.cluster.id; })) select(res.data.cluster.id, true);
+      });
+
+      remindBtn.addEventListener("click", async function () {
+        remindBtn.disabled = true; msg.textContent = "Sending reminders\u2026";
+        var res = await runReminders();
+        remindBtn.disabled = false;
+        if (!res.ok) { msg.textContent = ""; UI.toast(res.error.message, "error"); return; }
+        msg.textContent = "Reminders sent: " + res.data.sent + ", failed: " + res.data.failed + ".";
+        UI.toast("Reminders sent: " + res.data.sent + ", failed: " + res.data.failed, "success");
+      });
+    })();
     document.getElementById("refreshBtn").addEventListener("click", load);
     initMap();
     load();

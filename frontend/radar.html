@@ -68,6 +68,8 @@
 
     /* leaflet dark theme */
     .leaflet-container { background: #0a1410; font-family: var(--font-ui); }
+    .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.82) contrast(.92) saturate(.55); }
+    .leaflet-container .leaflet-marker-pane, .leaflet-container .leaflet-popup-pane { filter: none; }
     .leaflet-popup-content-wrapper { background: rgba(12, 24, 17, .97); color: var(--text); border: 1px solid var(--border-strong); border-radius: 16px; box-shadow: 0 24px 50px -16px rgba(0, 0, 0, .9); }
     .leaflet-popup-tip { background: rgba(12, 24, 17, .97); border: 1px solid var(--border-strong); }
     .leaflet-popup-content { margin: 16px 18px; min-width: 210px; line-height: 1.5; }
@@ -147,10 +149,11 @@
         box.insertAdjacentHTML("afterend", '<div class="map-msg"><div><strong style="font-family:var(--font-display);font-size:26px;color:var(--text)">Map unavailable</strong><p style="margin-top:6px">The map library could not load. Check your internet connection. Clusters are still listed on the right.</p></div></div>');
         return;
       }
-      map = L.map("map", { scrollWheelZoom: false }).setView([13.2, 77.9], 8);
-      var tiles = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-        maxZoom: 18, subdomains: "abcd",
-        attribution: "&copy; OpenStreetMap contributors &copy; CARTO"
+      map = L.map("map", { scrollWheelZoom: false, zoomControl: false }).setView([13.2, 77.9], 8);
+      L.control.zoom({ position: "topright" }).addTo(map);
+      var tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: "&copy; OpenStreetMap contributors"
       }).addTo(map);
       var errs = 0;
       tiles.on("tileerror", function () { errs++; if (errs >= 4) mapNote.hidden = false; });

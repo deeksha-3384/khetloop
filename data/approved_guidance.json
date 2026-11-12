@@ -1,0 +1,172 @@
+{
+  "early_blight": {
+    "guidance": {
+      "en": [
+        "Remove the affected leaves carefully and dispose of them away from the field.",
+        "Keep leaves dry by watering at the base of the plant instead of over the leaves.",
+        "Give plants enough space for good airflow, and avoid working among wet plants.",
+        "Confirm any treatment with your agri officer before using it."
+      ],
+      "hi": [
+        "प्रभावित पत्तियों को सावधानी से तोड़कर खेत से दूर नष्ट करें।",
+        "पत्तियों को सूखा रखें; पानी पौधे की जड़ के पास दें, पत्तियों पर नहीं।",
+        "पौधों के बीच पर्याप्त दूरी रखें ताकि हवा अच्छी तरह चले, और गीले पौधों के बीच काम न करें।",
+        "कोई भी उपचार इस्तेमाल करने से पहले अपने कृषि अधिकारी से पुष्टि करें।"
+      ],
+      "kn": [
+        "ಬಾಧಿತ ಎಲೆಗಳನ್ನು ಜಾಗರೂಕತೆಯಿಂದ ತೆಗೆದು ಹೊಲದಿಂದ ದೂರ ನಾಶಪಡಿಸಿ.",
+        "ಎಲೆಗಳನ್ನು ಒಣಗಿಸಿಡಿ; ನೀರನ್ನು ಗಿಡದ ಬುಡಕ್ಕೆ ಕೊಡಿ, ಎಲೆಗಳ ಮೇಲೆ ಅಲ್ಲ.",
+        "ಗಿಡಗಳ ನಡುವೆ ಸಾಕಷ್ಟು ಅಂತರ ಇರಲಿ, ಗಾಳಿ ಚೆನ್ನಾಗಿ ಆಡಲಿ; ಒದ್ದೆ ಗಿಡಗಳ ನಡುವೆ ಕೆಲಸ ಮಾಡಬೇಡಿ.",
+        "ಯಾವುದೇ ಚಿಕಿತ್ಸೆ ಬಳಸುವ ಮೊದಲು ನಿಮ್ಮ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ."
+      ]
+    },
+    "source": "DRAFT: general non-chemical cultural practices for tomato leaf diseases. To be verified against an ICAR / UAS Bengaluru / Karnataka Dept of Agriculture advisory; replace with page name and URL."
+  },
+  "late_blight": {
+    "guidance": {
+      "en": [
+        "Remove badly affected leaves and plants and destroy them away from the field; do not put them in compost.",
+        "Keep leaves dry and avoid watering over the leaves, especially in cool, wet weather.",
+        "Check neighbouring plants every day and send a new photo if the spots grow.",
+        "Confirm any treatment with your agri officer as soon as possible, because this can spread fast."
+      ],
+      "hi": [
+        "गंभीर रूप से प्रभावित पत्तियों और पौधों को खेत से दूर निकालकर नष्ट करें; उन्हें खाद में न डालें।",
+        "पत्तियों को सूखा रखें और ऊपर से पानी देने से बचें, खासकर ठंडे और नम मौसम में।",
+        "आसपास के पौधों को रोज़ देखें और धब्बे बढ़ें तो नई फोटो भेजें।",
+        "कोई भी उपचार इस्तेमाल करने से पहले जल्द से जल्द अपने कृषि अधिकारी से पुष्टि करें, क्योंकि यह तेज़ी से फैल सकता है।"
+      ],
+      "kn": [
+        "ತೀವ್ರವಾಗಿ ಬಾಧಿತ ಎಲೆಗಳು ಮತ್ತು ಗಿಡಗಳನ್ನು ಹೊಲದಿಂದ ದೂರ ತೆಗೆದು ನಾಶಪಡಿಸಿ; ಅವುಗಳನ್ನು ಗೊಬ್ಬರ ಗುಂಡಿಗೆ ಹಾಕಬೇಡಿ.",
+        "ಎಲೆಗಳನ್ನು ಒಣಗಿಸಿಡಿ ಮತ್ತು ಮೇಲಿನಿಂದ ನೀರು ಹಾಕುವುದನ್ನು ತಪ್ಪಿಸಿ, ವಿಶೇಷವಾಗಿ ತಂಪು ಮತ್ತು ತೇವದ ವಾತಾವರಣದಲ್ಲಿ.",
+        "ಪಕ್ಕದ ಗಿಡಗಳನ್ನು ಪ್ರತಿದಿನ ಗಮನಿಸಿ, ಕಲೆಗಳು ಹೆಚ್ಚಾದರೆ ಹೊಸ ಫೋಟೋ ಕಳುಹಿಸಿ.",
+        "ಯಾವುದೇ ಚಿಕಿತ್ಸೆ ಬಳಸುವ ಮೊದಲು ಆದಷ್ಟು ಬೇಗ ನಿಮ್ಮ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ, ಏಕೆಂದರೆ ಇದು ವೇಗವಾಗಿ ಹರಡಬಹುದು."
+      ]
+    },
+    "source": "DRAFT: general non-chemical cultural practices for tomato/potato late blight. To be verified against an ICAR / UAS Bengaluru / Karnataka Dept of Agriculture advisory; replace with page name and URL."
+  },
+  "septoria_leaf_spot": {
+    "guidance": {
+      "en": [
+        "Remove the lowest spotted leaves first and keep them away from the field.",
+        "Water at the base of the plant and avoid wetting the leaves.",
+        "Space plants so air can move between them, and clear weeds around them.",
+        "Confirm any treatment with your agri officer before using it."
+      ],
+      "hi": [
+        "सबसे नीचे की धब्बेदार पत्तियों को पहले हटाएँ और खेत से दूर रखें।",
+        "पानी पौधे की जड़ के पास दें और पत्तियों को गीला न करें।",
+        "पौधों के बीच हवा चलने लायक दूरी रखें और आसपास की खरपतवार हटाएँ।",
+        "कोई भी उपचार इस्तेमाल करने से पहले अपने कृषि अधिकारी से पुष्टि करें।"
+      ],
+      "kn": [
+        "ಕೆಳಗಿನ ಕಲೆಯುಳ್ಳ ಎಲೆಗಳನ್ನು ಮೊದಲು ತೆಗೆದು ಹೊಲದಿಂದ ದೂರ ಇಡಿ.",
+        "ಗಿಡದ ಬುಡಕ್ಕೆ ನೀರು ಕೊಡಿ, ಎಲೆಗಳನ್ನು ಒದ್ದೆ ಮಾಡಬೇಡಿ.",
+        "ಗಿಡಗಳ ನಡುವೆ ಗಾಳಿ ಆಡುವಷ್ಟು ಅಂತರ ಇಡಿ ಮತ್ತು ಸುತ್ತಲಿನ ಕಳೆ ತೆಗೆಯಿರಿ.",
+        "ಯಾವುದೇ ಚಿಕಿತ್ಸೆ ಬಳಸುವ ಮೊದಲು ನಿಮ್ಮ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ."
+      ]
+    },
+    "source": "DRAFT: general non-chemical cultural practices for tomato Septoria leaf spot. To be verified against an ICAR / UAS Bengaluru / Karnataka Dept of Agriculture advisory; replace with page name and URL."
+  },
+  "bacterial_spot": {
+    "guidance": {
+      "en": [
+        "Avoid touching or working among wet plants, because water and tools can carry the problem from plant to plant.",
+        "Remove badly affected leaves and keep them away from the field.",
+        "Water at the base of the plants and avoid splashing water onto the leaves.",
+        "Clean your hands and tools after handling affected plants.",
+        "Confirm any treatment with your agri officer before using it."
+      ],
+      "hi": [
+        "गीले पौधों को छूने या उनके बीच काम करने से बचें, क्योंकि पानी और औज़ार समस्या को एक पौधे से दूसरे में ले जा सकते हैं।",
+        "बहुत प्रभावित पत्तियों को हटाकर खेत से दूर रखें।",
+        "पानी पौधों की जड़ के पास दें और पत्तियों पर छींटे न पड़ने दें।",
+        "प्रभावित पौधों को छूने के बाद हाथ और औज़ार साफ करें।",
+        "कोई भी उपचार इस्तेमाल करने से पहले अपने कृषि अधिकारी से पुष्टि करें।"
+      ],
+      "kn": [
+        "ಒದ್ದೆ ಗಿಡಗಳನ್ನು ಮುಟ್ಟುವುದು ಅಥವಾ ಅವುಗಳ ನಡುವೆ ಕೆಲಸ ಮಾಡುವುದನ್ನು ತಪ್ಪಿಸಿ, ಏಕೆಂದರೆ ನೀರು ಮತ್ತು ಉಪಕರಣಗಳು ಸಮಸ್ಯೆಯನ್ನು ಒಂದು ಗಿಡದಿಂದ ಇನ್ನೊಂದಕ್ಕೆ ಒಯ್ಯಬಹುದು.",
+        "ಹೆಚ್ಚು ಬಾಧಿತ ಎಲೆಗಳನ್ನು ತೆಗೆದು ಹೊಲದಿಂದ ದೂರ ಇಡಿ.",
+        "ಗಿಡಗಳ ಬುಡಕ್ಕೆ ನೀರು ಕೊಡಿ, ಎಲೆಗಳ ಮೇಲೆ ನೀರು ಚಿಮ್ಮದಂತೆ ನೋಡಿಕೊಳ್ಳಿ.",
+        "ಬಾಧಿತ ಗಿಡಗಳನ್ನು ಮುಟ್ಟಿದ ನಂತರ ಕೈ ಮತ್ತು ಉಪಕರಣಗಳನ್ನು ಸ್ವಚ್ಛಗೊಳಿಸಿ.",
+        "ಯಾವುದೇ ಚಿಕಿತ್ಸೆ ಬಳಸುವ ಮೊದಲು ನಿಮ್ಮ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ."
+      ]
+    },
+    "source": "DRAFT: general non-chemical cultural practices for bacterial leaf spot in tomato/chilli. To be verified against an ICAR / UAS Bengaluru / Karnataka Dept of Agriculture advisory; replace with page name and URL."
+  },
+  "leaf_curl": {
+    "guidance": {
+      "en": [
+        "Check the underside of the leaves for tiny white flying insects and note what you see.",
+        "Remove badly curled plants and keep weeds down around the field.",
+        "Water regularly, because heat and water stress can also curl leaves.",
+        "Send a new photo in a few days so changes can be tracked.",
+        "Confirm any treatment with your agri officer before using it."
+      ],
+      "hi": [
+        "पत्तियों के नीचे की ओर छोटे सफेद उड़ने वाले कीड़ों को देखें और जो दिखे उसे नोट करें।",
+        "बहुत मुड़े हुए पौधों को हटाएँ और खेत के आसपास खरपतवार कम रखें।",
+        "नियमित रूप से सिंचाई करें, क्योंकि गर्मी और पानी की कमी से भी पत्तियाँ मुड़ सकती हैं।",
+        "कुछ दिनों बाद फिर फोटो भेजें ताकि बदलाव देखा जा सके।",
+        "कोई भी उपचार इस्तेमाल करने से पहले अपने कृषि अधिकारी से पुष्टि करें।"
+      ],
+      "kn": [
+        "ಎಲೆಗಳ ಕೆಳಭಾಗದಲ್ಲಿ ಸಣ್ಣ ಬಿಳಿ ಹಾರುವ ಕೀಟಗಳಿವೆಯೇ ನೋಡಿ ಮತ್ತು ಕಂಡದ್ದನ್ನು ಗಮನಿಸಿ.",
+        "ತುಂಬಾ ಸುರುಳಿಯಾದ ಗಿಡಗಳನ್ನು ತೆಗೆದು, ಹೊಲದ ಸುತ್ತ ಕಳೆ ಕಡಿಮೆ ಇಡಿ.",
+        "ನಿಯಮಿತವಾಗಿ ನೀರು ಕೊಡಿ, ಏಕೆಂದರೆ ಬಿಸಿಲು ಮತ್ತು ನೀರಿನ ಕೊರತೆಯಿಂದಲೂ ಎಲೆಗಳು ಸುರುಳಿಯಾಗಬಹುದು.",
+        "ಕೆಲವು ದಿನಗಳ ನಂತರ ಮತ್ತೆ ಫೋಟೋ ಕಳುಹಿಸಿ, ಬದಲಾವಣೆ ಗಮನಿಸಲು ಸಹಾಯವಾಗುತ್ತದೆ.",
+        "ಯಾವುದೇ ಚಿಕಿತ್ಸೆ ಬಳಸುವ ಮೊದಲು ನಿಮ್ಮ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ."
+      ]
+    },
+    "source": "DRAFT: general non-chemical practices for leaf curl symptoms in tomato/chilli. To be verified against an ICAR / UAS Bengaluru / Karnataka Dept of Agriculture advisory; replace with page name and URL."
+  },
+  "healthy": {
+    "guidance": {
+      "en": [
+        "The leaf looks healthy in this photo, but one photo cannot rule out every problem.",
+        "Keep checking your plants regularly and keep the leaves dry.",
+        "Send a new photo if you notice spots, yellowing or curling.",
+        "If you have any doubt, confirm any treatment with your agri officer before using it."
+      ],
+      "hi": [
+        "इस फोटो में पत्ती स्वस्थ दिखती है, लेकिन एक फोटो से हर समस्या को नकारा नहीं जा सकता।",
+        "अपने पौधों को नियमित रूप से देखते रहें और पत्तियों को सूखा रखें।",
+        "धब्बे, पीलापन या पत्तियाँ मुड़ती दिखें तो नई फोटो भेजें।",
+        "कोई शक हो तो कोई भी उपचार इस्तेमाल करने से पहले अपने कृषि अधिकारी से पुष्टि करें।"
+      ],
+      "kn": [
+        "ಈ ಫೋಟೋದಲ್ಲಿ ಎಲೆ ಆರೋಗ್ಯವಾಗಿ ಕಾಣುತ್ತಿದೆ, ಆದರೆ ಒಂದೇ ಫೋಟೋದಿಂದ ಎಲ್ಲ ಸಮಸ್ಯೆಗಳನ್ನು ತಳ್ಳಿಹಾಕಲು ಸಾಧ್ಯವಿಲ್ಲ.",
+        "ನಿಮ್ಮ ಗಿಡಗಳನ್ನು ನಿಯಮಿತವಾಗಿ ಪರೀಕ್ಷಿಸುತ್ತಿರಿ ಮತ್ತು ಎಲೆಗಳನ್ನು ಒಣಗಿಸಿಡಿ.",
+        "ಕಲೆಗಳು, ಹಳದಿ ಬಣ್ಣ ಅಥವಾ ಎಲೆ ಸುರುಳಿಯಾಗುವುದು ಕಂಡರೆ ಹೊಸ ಫೋಟೋ ಕಳುಹಿಸಿ.",
+        "ಸಂದೇಹ ಇದ್ದರೆ ಯಾವುದೇ ಚಿಕಿತ್ಸೆ ಬಳಸುವ ಮೊದಲು ನಿಮ್ಮ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ."
+      ]
+    },
+    "source": "DRAFT: general crop-monitoring practice. To be verified against an ICAR / UAS Bengaluru / Karnataka Dept of Agriculture advisory; replace with page name and URL."
+  },
+  "default": {
+    "guidance": {
+      "en": [
+        "This does not clearly match a known leaf problem, so please take this as a preliminary view only.",
+        "Remove badly affected leaves and keep them away from the field.",
+        "Keep the leaves dry and the plants well spaced for airflow.",
+        "Send a clear, close photo in good light so it can be checked again.",
+        "Confirm any treatment with your agri officer before using it."
+      ],
+      "hi": [
+        "यह किसी जानी-पहचानी पत्ती की समस्या से साफ़ नहीं मिलता, इसलिए इसे केवल प्रारंभिक राय समझें।",
+        "बहुत प्रभावित पत्तियों को हटाकर खेत से दूर रखें।",
+        "पत्तियों को सूखा रखें और पौधों के बीच हवा के लिए पर्याप्त दूरी रखें।",
+        "अच्छी रोशनी में साफ़ और पास से फोटो भेजें ताकि दोबारा जाँच हो सके।",
+        "कोई भी उपचार इस्तेमाल करने से पहले अपने कृषि अधिकारी से पुष्टि करें।"
+      ],
+      "kn": [
+        "ಇದು ತಿಳಿದಿರುವ ಯಾವುದೇ ಎಲೆ ಸಮಸ್ಯೆಗೆ ಸ್ಪಷ್ಟವಾಗಿ ಹೊಂದಿಕೆಯಾಗುತ್ತಿಲ್ಲ, ಆದ್ದರಿಂದ ಇದನ್ನು ಕೇವಲ ಪ್ರಾಥಮಿಕ ಅಭಿಪ್ರಾಯವೆಂದು ಪರಿಗಣಿಸಿ.",
+        "ಹೆಚ್ಚು ಬಾಧಿತ ಎಲೆಗಳನ್ನು ತೆಗೆದು ಹೊಲದಿಂದ ದೂರ ಇಡಿ.",
+        "ಎಲೆಗಳನ್ನು ಒಣಗಿಸಿಡಿ ಮತ್ತು ಗಾಳಿ ಆಡುವಂತೆ ಗಿಡಗಳ ನಡುವೆ ಅಂತರ ಇಡಿ.",
+        "ಒಳ್ಳೆಯ ಬೆಳಕಿನಲ್ಲಿ ಸ್ಪಷ್ಟವಾದ, ಹತ್ತಿರದ ಫೋಟೋ ಕಳುಹಿಸಿ, ಇದರಿಂದ ಮತ್ತೆ ಪರಿಶೀಲಿಸಬಹುದು.",
+        "ಯಾವುದೇ ಚಿಕಿತ್ಸೆ ಬಳಸುವ ಮೊದಲು ನಿಮ್ಮ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ."
+      ]
+    },
+    "source": "DRAFT: general fallback guidance. To be verified against an ICAR / UAS Bengaluru / Karnataka Dept of Agriculture advisory; replace with page name and URL."
+  }
+}

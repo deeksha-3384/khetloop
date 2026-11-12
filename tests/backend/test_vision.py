@@ -57,3 +57,7 @@ def test_garbage_model_reply_fails_cleanly(monkeypatch):
     monkeypatch.setattr(gv, "_call_groq", lambda b64, mime, prompt: "sorry I cannot help")
     res = gv.analyse_leaf(PNG, "tomato", None)
     assert res["ok"] is False and res["error"]["code"] == "AI_UNAVAILABLE"
+
+def test_parse_ignores_think_block_and_extra_text():
+    reply = '<think>maybe {"a": 1} hmm</think> Here you go: ' + GOOD + " Hope this helps."
+    assert gv._parse_model_json(reply)["suspected_issue"] == "early_blight"

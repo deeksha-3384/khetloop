@@ -11,6 +11,7 @@ import base64
 import io
 import json
 import logging
+import re
 
 import requests
 
@@ -20,7 +21,7 @@ from shared.constants import CONFIDENCE_BANDS, IMAGE_QUALITIES, ISSUES
 log = logging.getLogger("khetloop.vision")
 
 PROVIDER_ORDER = ["groq", "gemini"]  # flip the order here if you prefer Gemini first
-DEFAULT_GROQ_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct"
+DEFAULT_GROQ_MODEL = "qwen/qwen3.8-27b"
 TIMEOUT_S = 25
 MAX_SIDE_PX = 1280
 MAX_RAW_BYTES = 3 * 1024 * 1024
@@ -85,19 +86,32 @@ def _build_prompt(crop: str, transcript) -> str:
     ) % (crop, said, ", ".join('"%s"' % i for i in ISSUES))
 
 
+_THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
+
+
 def _parse_model_json(text: str) -> dict:
-    """Pull the first JSON object out of the model reply (handles ```json fences)."""
-    text = (text or "").strip()
+    """Find the JSON object in a model reply. Ignores <think> blocks, code fences and extra text."""
+    text = _THINK_RE.sub("", text or "").strip()
     try:
         data = json.loads(text)
+        if isinstance(data, dict):
+            return data
     except ValueError:
-        start, end = text.find("{"), text.rfind("}")
-        if start == -1 or end <= start:
-            raise ValueError("model reply contained no JSON")
-        data = json.loads(text[start:end + 1])
-    if not isinstance(data, dict):
-        raise ValueError("model reply was not a JSON object")
-    return data
+        pass
+    decoder = json.JSONDecoder()
+    best = None
+    for i, ch in enumerate(text):
+        if ch != "{":
+            continue
+        try:
+            obj, _ = decoder.raw_decode(text[i:])
+        except ValueError:
+            continue
+        if isinstance(obj, dict) and "suspected_issue" in obj:
+            best = obj  # keep the last matching object
+    if best is None:
+        raise ValueError("model reply contained no usable JSON")
+    return best
 
 
 def _normalise(raw: dict) -> dict:
@@ -124,8 +138,9 @@ def _call_groq(b64: str, mime: str, prompt: str) -> str:
         headers={"Authorization": "Bearer " + Config.GROQ_API_KEY, "Content-Type": "application/json"},
         json={
             "model": Config.GROQ_MODEL or DEFAULT_GROQ_MODEL,
-            "temperature": 0,
-            "max_tokens": 600,
+            "temperature": 0.2,
+            "max_completion_tokens": 1500,
+            "response_format": {"type": "json_object"},
             "messages": [{"role": "user", "content": [
                 {"type": "text", "text": prompt},
                 {"type": "image_url", "image_url": {"url": "data:%s;base64,%s" % (mime, b64)}},
@@ -136,7 +151,7 @@ def _call_groq(b64: str, mime: str, prompt: str) -> str:
     if r.status_code != 200:
         log.warning("groq HTTP %s: %s", r.status_code, r.text[:200])
         raise RuntimeError("groq returned HTTP %s" % r.status_code)
-    return r.json()["choices"][0]["message"]["content"]
+    return r.json()["choices"][0]["message"].get("content") or ""
 
 
 def _call_gemini(b64: str, mime: str, prompt: str) -> str:

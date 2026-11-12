@@ -179,6 +179,11 @@ def run(ctx):
                d.find_similar_recent_reports("tomato", "early_blight", 72, 13.14, 78.13, 10)}
     check("8  find_similar_recent_reports finds the 3 test reports",
           {report["id"], rb["id"], rc["id"]} <= similar)
+    rows = d.find_similar_recent_reports("tomato", "early_blight", 72, 13.14, 78.13, 10)
+    sources = {r["report_id"]: r.get("data_source") for r in rows}
+    check("8a similar rows carry data_source (simulated stays simulated)",
+          sources.get(rb["id"]) == "simulated" and sources.get(rc["id"]) == "simulated"
+          and all(v in ("live", "cached", "simulated", "unverified") for v in sources.values()))
     nearby = d.find_nearby_farms("tomato", 13.14, 78.13, 10, farm["id"])
     nearby_ids = {f["farm_id"] for f in nearby}
     check("8b find_nearby_farms excludes the given farm",

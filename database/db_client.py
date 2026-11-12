@@ -672,6 +672,7 @@ def find_similar_recent_reports(crop: str, suspected_issue: str, since_hours: in
                 "lng": farm["lng"],
                 "area_label": farm["area_label"],
                 "suspected_issue": row["suspected_issue"],
+                "data_source": row.get("data_source") or "live",
             })
         return out
     return _sb_call("find_similar_recent_reports", locals())
@@ -1310,6 +1311,7 @@ def _sb_find_similar_recent_reports(crop, suspected_issue, since_hours, lat, lng
             "lng": float(farm["lng"]),
             "area_label": farm["area_label"],
             "suspected_issue": row["suspected_issue"],
+            "data_source": row.get("data_source") or "live",
         })
     return out
 
@@ -1510,3 +1512,4 @@ def _sb_mark_reminder_sent(reminder_id):
     if not updated:
         raise DBError("DB_ERROR", f"reminder not found: {reminder_id}")
     return None
+

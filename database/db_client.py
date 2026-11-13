@@ -245,7 +245,7 @@ def get_farmer_for_farm(farm_id: str) -> dict | None:
 
 def get_or_create_farm(farmer_id: str, crop: str, sowing_date: str | None = None,
                        area_label: str | None = None, lat: float | None = None,
-                       lng: float | None = None) -> dict:
+                       lng: float | None = None, data_source: str = "live") -> dict:
     """Same (farmer_id, crop) -> return the existing farm and update any non-null values.
     lat/lng are rounded to 2 decimals before storage."""
     farmer_id = _require_text(farmer_id, "farmer_id")
@@ -253,6 +253,7 @@ def get_or_create_farm(farmer_id: str, crop: str, sowing_date: str | None = None
     sowing_date = _check_date(sowing_date)
     lat = _round_coord(lat, "lat", 90)
     lng = _round_coord(lng, "lng", 180)
+    _require_in(data_source, DATA_SOURCES, "data_source")
     if _is_memory():
         if _mem_find("farmers", farmer_id) is None:
             raise DBError("DB_ERROR", f"farmer not found: {farmer_id}")
@@ -275,7 +276,7 @@ def get_or_create_farm(farmer_id: str, crop: str, sowing_date: str | None = None
             "area_label": area_label,
             "lat": lat,
             "lng": lng,
-            "data_source": "live",
+            "data_source": data_source,
             "created_at": _now_iso(),
         }
         _MEM["farms"].append(row)
@@ -394,7 +395,8 @@ def insert_report(farm_id: str, image_path: str, voice_transcript: str | None,
                   voice_language: str | None, assessment: dict, escalation_reason: str | None,
                   why: list, weather: dict | None, risk: dict | None,
                   reply_language: str | None, reply_text: str | None,
-                  status: str, data_source: str = "live") -> dict:
+                  status: str, data_source: str = "live",
+                  created_at: str | None = None) -> dict:
     """Save a report. Returns the full Report model (events is empty until add_report_event)."""
     farm_id = _require_text(farm_id, "farm_id")
     image_path = _require_text(image_path, "image_path")
@@ -419,6 +421,7 @@ def insert_report(farm_id: str, image_path: str, voice_transcript: str | None,
         raise DBError("DB_ERROR", "risk must be a dict or None")
     _require_in(status, REPORT_STATUSES, "status")
     _require_in(data_source, DATA_SOURCES, "data_source")
+    created_at = _check_created_at(created_at)
     if _is_memory():
         if _mem_find("farms", farm_id) is None:
             raise DBError("DB_ERROR", f"farm not found: {farm_id}")
@@ -442,18 +445,20 @@ def insert_report(farm_id: str, image_path: str, voice_transcript: str | None,
             "reply_audio_path": None,
             "status": status,
             "data_source": data_source,
-            "created_at": _now_iso(),
+            "created_at": created_at or _now_iso(),
         }
         _MEM["reports"].append(row)
         return _mem_report_model(row)
     return _sb_call("insert_report", locals())
 
 
-def add_report_event(report_id: str, status: str, actor: str, note: str | None = None) -> dict:
+def add_report_event(report_id: str, status: str, actor: str, note: str | None = None,
+                     created_at: str | None = None) -> dict:
     """Add one timeline entry. Returns {status, actor, timestamp[, note]}."""
     report_id = _require_text(report_id, "report_id")
     _require_in(status, REPORT_STATUSES, "status")
     _require_in(actor, EVENT_ACTORS, "actor")
+    created_at = _check_created_at(created_at)
     if _is_memory():
         if _mem_find("reports", report_id) is None:
             raise DBError("DB_ERROR", f"report not found: {report_id}")
@@ -462,7 +467,7 @@ def add_report_event(report_id: str, status: str, actor: str, note: str | None =
             "status": status,
             "actor": actor,
             "note": note,
-            "created_at": _now_iso(),
+            "created_at": created_at or _now_iso(),
         }
         _MEM["events"].append(row)
         return _event_out(row)
@@ -1000,7 +1005,7 @@ def _sb_get_farmer_for_farm(farm_id):
     return _farmer_out(farmers[0]) if farmers else None
 
 
-def _sb_get_or_create_farm(farmer_id, crop, sowing_date, area_label, lat, lng):
+def _sb_get_or_create_farm(farmer_id, crop, sowing_date, area_label, lat, lng, data_source="live"):
     table = _sb().table("farms")
     found = (table.select("*").eq("farmer_id", farmer_id).eq("crop", crop)
              .order("created_at").limit(1).execute().data)
@@ -1025,6 +1030,7 @@ def _sb_get_or_create_farm(farmer_id, crop, sowing_date, area_label, lat, lng):
         "area_label": area_label,
         "lat": lat,
         "lng": lng,
+        "data_source": data_source,
     }).execute().data
     return _farm_out(created[0])
 
@@ -1139,11 +1145,11 @@ def _sb_reviews_by_report(report_ids):
 
 def _sb_insert_report(farm_id, image_path, voice_transcript, voice_language, decision, issue,
                       band, quality, symptoms, escalation_reason, why, weather, risk,
-                      reply_language, reply_text, status, data_source):
+                      reply_language, reply_text, status, data_source, created_at=None):
     farm = _sb().table("farms").select("*").eq("id", farm_id).limit(1).execute().data
     if not farm:
         raise DBError("DB_ERROR", f"farm not found: {farm_id}")
-    created = _sb().table("reports").insert({
+    row = {
         "farm_id": farm_id,
         "image_path": image_path,
         "voice_transcript": voice_transcript,
@@ -1161,20 +1167,26 @@ def _sb_insert_report(farm_id, image_path, voice_transcript, voice_language, dec
         "reply_text": reply_text,
         "status": status,
         "data_source": data_source,
-    }).execute().data
+    }
+    if created_at:
+        row["created_at"] = created_at
+    created = _sb().table("reports").insert(row).execute().data
     return _sb_report_model(created[0], farm[0], [], None)
 
 
-def _sb_add_report_event(report_id, status, actor, note):
+def _sb_add_report_event(report_id, status, actor, note, created_at=None):
     found = _sb().table("reports").select("id").eq("id", report_id).limit(1).execute().data
     if not found:
         raise DBError("DB_ERROR", f"report not found: {report_id}")
-    created = _sb().table("report_events").insert({
+    row = {
         "report_id": report_id,
         "status": status,
         "actor": actor,
         "note": note,
-    }).execute().data
+    }
+    if created_at:
+        row["created_at"] = created_at
+    created = _sb().table("report_events").insert(row).execute().data
     return _sb_event_out(created[0])
 
 
@@ -1513,3 +1525,127 @@ def _sb_mark_reminder_sent(reminder_id):
         raise DBError("DB_ERROR", f"reminder not found: {reminder_id}")
     return None
 
+
+# ---------------------------------------------------------------------------
+# Seed support: created_at check, count_simulated, delete_simulated
+# ---------------------------------------------------------------------------
+def _check_created_at(value):
+    """None -> None. Otherwise an ISO timestamp (e.g. 2026-11-13T10:00:00Z); returned in UTC."""
+    if value is None:
+        return None
+    message = f"invalid created_at: {value!r} (use ISO UTC, e.g. 2026-11-13T10:00:00Z)"
+    if not isinstance(value, str) or not value.strip():
+        raise DBError("DB_ERROR", message)
+    try:
+        moment = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError:
+        raise DBError("DB_ERROR", message)
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=timezone.utc)
+    return moment.astimezone(timezone.utc).isoformat()
+
+
+def count_simulated() -> int:
+    """How many rows are labelled data_source='simulated' (farms + reports + clusters + alerts)."""
+    if _is_memory():
+        return sum(1 for table in ("farms", "reports", "clusters", "alerts")
+                   for row in _MEM[table] if row.get("data_source") == "simulated")
+    return _sb_call("count_simulated", locals())
+
+
+def delete_simulated() -> dict:
+    """Delete ALL simulated data: farms, reports, clusters, alerts (everything hanging off
+    them goes too), the images of deleted reports, and farmers with no telegram_chat_id who
+    are left with no farms. Live rows are never touched. Returns how many of each were removed."""
+    if _is_memory():
+        return _mem_delete_simulated()
+    return _sb_call("delete_simulated", locals())
+
+
+def _mem_delete_simulated() -> dict:
+    sim_farm_ids = {f["id"] for f in _MEM["farms"] if f.get("data_source") == "simulated"}
+    dead_reports = {r["id"]: r.get("image_path") for r in _MEM["reports"]
+                    if r.get("data_source") == "simulated" or r["farm_id"] in sim_farm_ids}
+    sim_cluster_ids = {c["id"] for c in _MEM["clusters"] if c.get("data_source") == "simulated"}
+    n_alerts = sum(1 for a in _MEM["alerts"] if a.get("data_source") == "simulated")
+    _MEM["alerts"] = [a for a in _MEM["alerts"]
+                      if a.get("data_source") != "simulated"
+                      and a.get("cluster_id") not in sim_cluster_ids
+                      and a.get("farm_id") not in sim_farm_ids]
+    for table in ("events", "reviews", "reminders"):
+        _MEM[table] = [x for x in _MEM[table] if x.get("report_id") not in dead_reports]
+    _MEM["cluster_reports"] = [x for x in _MEM["cluster_reports"]
+                               if x.get("cluster_id") not in sim_cluster_ids
+                               and x.get("report_id") not in dead_reports]
+    _MEM["reports"] = [r for r in _MEM["reports"] if r["id"] not in dead_reports]
+    _MEM["clusters"] = [c for c in _MEM["clusters"] if c["id"] not in sim_cluster_ids]
+    _MEM["farms"] = [f for f in _MEM["farms"] if f["id"] not in sim_farm_ids]
+    images = 0
+    for path in dead_reports.values():
+        if path and _MEM["images"].pop(path, None) is not None:
+            images += 1
+    keep = {f["farmer_id"] for f in _MEM["farms"]}
+    dead_farmers = {f["id"] for f in _MEM["farmers"]
+                    if f.get("telegram_chat_id") is None and f["id"] not in keep}
+    _MEM["farmers"] = [f for f in _MEM["farmers"] if f["id"] not in dead_farmers]
+    return {"alerts": n_alerts, "clusters": len(sim_cluster_ids), "farms": len(sim_farm_ids),
+            "reports": len(dead_reports), "farmers": len(dead_farmers), "images": images}
+
+
+def _sb_chunks(items, size=100):
+    items = list(items)
+    for i in range(0, len(items), size):
+        yield items[i:i + size]
+
+
+def _sb_count_simulated():
+    total = 0
+    for table in ("farms", "reports", "clusters", "alerts"):
+        rows = _sb().table(table).select("id").eq("data_source", "simulated").execute().data
+        total += len(rows or [])
+    return total
+
+
+def _sb_delete_simulated():
+    sb = _sb()
+    sim_farm_ids = [r["id"] for r in
+                    (sb.table("farms").select("id").eq("data_source", "simulated").execute().data or [])]
+    # Remember every report that will disappear (and its image) before deleting anything.
+    reports = {}
+    for r in sb.table("reports").select("id,image_path").eq("data_source", "simulated").execute().data or []:
+        reports[r["id"]] = r.get("image_path")
+    for chunk in _sb_chunks(sim_farm_ids):
+        for r in sb.table("reports").select("id,image_path").in_("farm_id", chunk).execute().data or []:
+            reports[r["id"]] = r.get("image_path")
+
+    def delete_labelled(table):
+        rows = sb.table(table).delete().eq("data_source", "simulated").execute().data
+        return len(rows or [])
+
+    n_alerts = delete_labelled("alerts")
+    n_clusters = delete_labelled("clusters")
+    delete_labelled("reports")
+    n_farms = delete_labelled("farms")      # also removes reports, events, reviews, reminders
+
+    # Farmers have no data_source column: remove seed farmers (no chat id) left without farms.
+    no_chat = [r["id"] for r in
+               (sb.table("farmers").select("id").is_("telegram_chat_id", "null").execute().data or [])]
+    with_farms = set()
+    for chunk in _sb_chunks(no_chat):
+        for r in sb.table("farms").select("farmer_id").in_("farmer_id", chunk).execute().data or []:
+            with_farms.add(r["farmer_id"])
+    orphans = [i for i in no_chat if i not in with_farms]
+    n_farmers = 0
+    for chunk in _sb_chunks(orphans):
+        n_farmers += len(sb.table("farmers").delete().in_("id", chunk).execute().data or [])
+
+    # Remove the images of the deleted reports (best effort).
+    n_images = 0
+    for chunk in _sb_chunks([p for p in reports.values() if p]):
+        try:
+            sb.storage.from_(_bucket()).remove(chunk)
+            n_images += len(chunk)
+        except Exception:
+            pass
+    return {"alerts": n_alerts, "clusters": n_clusters, "farms": n_farms,
+            "reports": len(reports), "farmers": n_farmers, "images": n_images}

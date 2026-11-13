@@ -1,0 +1,80 @@
+{
+  "ok": true,
+  "data": {
+    "id": "rep_a1b2c3d4",
+    "farm_id": "farm_4a5b6c7d",
+    "crop": "tomato",
+    "created_at": "2026-11-12T09:15:00Z",
+    "status": "expert_review_pending",
+    "data_source": "live",
+    "image_url": "https://signed-url.example/rep_a1b2c3d4.jpg",
+    "voice_transcript": "ನನ್ನ ಟೊಮೇಟೊ ಗಿಡದ ಎಲೆಗಳಲ್ಲಿ ಕಲೆಗಳು ಕಾಣಿಸುತ್ತಿವೆ",
+    "voice_language": "kn",
+    "assessment": {
+      "decision": "escalate_to_expert",
+      "suspected_issue": "early_blight",
+      "confidence_band": "medium",
+      "image_quality": "good",
+      "visible_symptoms": [
+        "brown concentric spots"
+      ],
+      "confirmed": false
+    },
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling early blight."
+      },
+      {
+        "code": "NEARBY_REPORTS",
+        "text": "2 similar reports were submitted nearby in the last 72 hours."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (live forecast)."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "fetched_at": "2026-11-12T09:14:00Z",
+      "rain_expected": true,
+      "rain_mm_next_48h": 12.4,
+      "humidity_pct_avg": 82,
+      "temp_c_avg": 24.5,
+      "data_source": "live"
+    },
+    "risk": {
+      "level": "elevated",
+      "reasons": [
+        "Similar reports nearby",
+        "Rain forecast"
+      ]
+    },
+    "farmer_reply": {
+      "language": "kn",
+      "text": "ಇದು ಪ್ರಾಥಮಿಕ ಮೌಲ್ಯಮಾಪನ ಮಾತ್ರ. ತಜ್ಞರು ಪರಿಶೀಲಿಸುತ್ತಾರೆ.",
+      "audio_url": null
+    },
+    "events": [
+      {
+        "status": "submitted",
+        "actor": "farmer",
+        "timestamp": "2026-11-12T09:15:00Z"
+      },
+      {
+        "status": "ai_assessed",
+        "actor": "ai",
+        "timestamp": "2026-11-12T09:15:06Z"
+      },
+      {
+        "status": "expert_review_pending",
+        "actor": "rules",
+        "timestamp": "2026-11-12T09:15:07Z"
+      }
+    ],
+    "expert_review": null
+  }
+}

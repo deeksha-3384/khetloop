@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: 028f11fb-a1b5-4c7b-8950-700f90168484
+
+cloudResources:
+  collections:
+    ../postman/collections/KhetLoop API: 9706dc08-b692-42fa-be66-1c20d1a19f1e
+
+# All resources in the `postman/` folder are automatically registered in Local View.
+# Point to additional files outside the `postman/` folder to register them individually. Example:
+#localResources:
+#  collections:
+#    - ../tests/E2E Test Collection/

@@ -1,11 +1,15 @@
 """Endpoints 5 and 6: expert queue and review. Both need X-Expert-Key."""
+import logging
+
 from flask import Blueprint, request
 
+from backend.services import reply_writer
+from backend.utils import deps
 from backend.utils.auth import require_expert_key
-from backend.utils.mock_loader import REVIEWED, load_mock, now_iso
 from backend.utils.responses import err, ok
-from shared.constants import ISSUES, REPORT_STATUSES
+from shared.constants import FOLLOW_UP_HOURS, ISSUES, LANGUAGES, REPORT_STATUSES
 
+log = logging.getLogger("khetloop.routes")
 bp = Blueprint("expert", __name__)
 
 
@@ -15,9 +19,7 @@ def list_cases():
     status = request.args.get("status", "expert_review_pending")
     if status not in REPORT_STATUSES:
         return err("INVALID_REQUEST", "Unknown status", 400)
-    cases = []
-    if status == "expert_review_pending":
-        cases = [c for c in load_mock("expert_cases.json")["cases"] if c["report_id"] not in REVIEWED]
+    cases = deps.get_db().list_expert_cases(status)
     return ok({"count": len(cases), "cases": cases})
 
 
@@ -33,14 +35,34 @@ def submit_review(report_id):
     if confirmed_issue is not None and confirmed_issue not in ISSUES:
         return err("INVALID_REQUEST", "confirmed_issue must be null or a known issue", 400)
 
-    known = {c["report_id"] for c in load_mock("expert_cases.json")["cases"]}
-    if report_id not in known:
+    db = deps.get_db()
+    report = db.get_report(report_id)
+    if report is None:
         return err("NOT_FOUND", "Report not found", 404)
-    if report_id in REVIEWED:
+    if report.get("expert_review") or report.get("status") == "expert_reviewed":
         return err("CONFLICT", "Report already reviewed", 409)
 
-    # MOCK: real version saves via db_client, messages the farmer, schedules a reminder.
-    review = {"id": "rev_" + report_id[-8:], "report_id": report_id, "expert_name": expert_name,
-              "guidance": guidance, "confirmed_issue": confirmed_issue, "created_at": now_iso()}
-    REVIEWED[report_id] = review
+    review = db.insert_expert_review(report_id, expert_name, guidance, confirmed_issue)
+    db.add_report_event(report_id, "expert_reviewed", "expert")
+    db.update_report_status(report_id, "expert_reviewed")
+
+    # Message the farmer in their language. A Telegram failure must not undo the review.
+    reply_lang = (report.get("farmer_reply") or {}).get("language")
+    farmer = db.get_farmer_for_farm(report.get("farm_id")) or {}
+    lang = reply_lang if reply_lang in LANGUAGES else (farmer.get("language") if farmer.get("language") in LANGUAGES else "en")
+    chat_id = farmer.get("telegram_chat_id")
+    if chat_id:
+        try:
+            deps.send_telegram(chat_id, reply_writer.write_expert_message(guidance, lang))
+        except Exception as e:
+            log.warning("expert message failed: %s", type(e).__name__)
+
+    # Schedule the follow-up reminder (also non-fatal).
+    reminders = deps.get_integration("reminders")
+    if reminders:
+        try:
+            reminders.schedule(report_id, FOLLOW_UP_HOURS, reply_writer.write_followup(lang))
+        except Exception as e:
+            log.warning("reminder scheduling failed: %s", type(e).__name__)
+
     return ok({"report_id": report_id, "status": "expert_reviewed", "review": review}, 201)

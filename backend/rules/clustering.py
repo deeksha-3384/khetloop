@@ -58,7 +58,7 @@ def _default_db():
     return db_client
 
 
-def check_cluster(report: dict, db=None):
+def check_cluster(report: dict, db=None, reuse_existing: bool = True):
     issue = report.get("suspected_issue")
     crop = report.get("crop")
     lat, lng = report.get("lat"), report.get("lng")
@@ -110,7 +110,7 @@ def check_cluster(report: dict, db=None):
 
     # Reuse an existing nearby cluster (same crop and issue, inside the time window).
     cutoff = datetime.now(timezone.utc) - timedelta(hours=RADAR_TIME_WINDOW_HOURS)
-    for c in db.list_clusters():
+    for c in (db.list_clusters() if reuse_existing else []):
         if c.get("crop") != crop or c.get("suspected_issue") != issue:
             continue
         if c.get("centroid_lat") is None or c.get("centroid_lng") is None:

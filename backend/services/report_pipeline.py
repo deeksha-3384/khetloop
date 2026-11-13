@@ -87,12 +87,20 @@ def _stored_assessment(assessment, decision: str) -> dict:
             "visible_symptoms": list(base.get("visible_symptoms") or []), "confirmed": False}
 
 
-def deliver_alerts(cluster_result: dict, crop: str, db, send_message=None) -> int:
-    """Send the cautious notice once per farm per cluster. Returns how many were delivered."""
+def deliver_alerts(cluster_result: dict, crop: str, db, send_message=None, extra_farm_ids=()) -> int:
+    """Send the cautious notice once per farm per cluster. Returns how many were delivered.
+    extra_farm_ids are alerted even if they are outside the radius (used by the demo scenario)."""
     cluster = cluster_result["cluster"]
     detail = db.get_cluster_detail(cluster["id"]) or {}
     already = {a.get("farm_id") for a in detail.get("alerts", [])}
-    farms = db.find_nearby_farms(crop, cluster["centroid_lat"], cluster["centroid_lng"], RADAR_RADIUS_KM)
+    farms = list(db.find_nearby_farms(crop, cluster["centroid_lat"], cluster["centroid_lng"], RADAR_RADIUS_KM))
+    listed = {f.get("farm_id") for f in farms}
+    for extra_id in extra_farm_ids:
+        if extra_id in listed:
+            continue
+        farmer = db.get_farmer_for_farm(extra_id) or {}
+        farms.append({"farm_id": extra_id, "language": farmer.get("language"),
+                      "telegram_chat_id": farmer.get("telegram_chat_id")})
     delivered_count = 0
     for farm in farms:
         farm_id = farm.get("farm_id")

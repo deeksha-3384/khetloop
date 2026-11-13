@@ -270,3 +270,14 @@ def test_bare_field_words_do_not_trigger_severity():
 def test_missing_data_source_makes_the_cluster_unverified():
     res = check_cluster(NEW, FakeDB([R(1, ds=None), R(2, ds=None)]))
     assert res["cluster"]["data_source"] == "unverified"
+
+
+
+def test_reuse_existing_false_always_creates_a_fresh_cluster():
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    existing = {"id": "clu_old00001", "crop": "tomato", "suspected_issue": "early_blight",
+                "centroid_lat": 13.15, "centroid_lng": 78.13, "severity": "watch", "report_count": 3,
+                "created_at": now}
+    db = FakeDB([R(1), R(2)], clusters=[existing])
+    res = check_cluster(NEW, db, reuse_existing=False)
+    assert res["created"] is True and len(db.created) == 1

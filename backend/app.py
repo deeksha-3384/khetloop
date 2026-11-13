@@ -39,6 +39,9 @@ def create_app() -> Flask:
 
     @app.errorhandler(Exception)
     def handle_unexpected(e: Exception):
+        if type(e).__name__ == "DBError":  # P2's database error class, detected by name
+            log.warning("database error: %s", getattr(e, "code", "DB_ERROR"))
+            return err("DB_ERROR", "A database error occurred", 500)
         log.exception("Unhandled error")
         return err("INTERNAL_ERROR", "Something went wrong on the server", 500)
 

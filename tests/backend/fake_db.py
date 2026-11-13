@@ -1,5 +1,5 @@
-"""A tiny in-memory stand-in for database/db_client.py, used only by the pipeline tests.
-It implements just the functions the pipeline calls, with the contract's signatures."""
+"""A tiny in-memory stand-in for database/db_client.py, used only by the pipeline and route tests.
+It implements just the functions the backend calls, with the contract's signatures."""
 import itertools
 
 _ids = itertools.count(1)
@@ -34,7 +34,7 @@ class FakeDB:
         self.events[rid] = []
         return rid
 
-    # ---- functions the pipeline calls
+    # ---- functions the backend calls
     def get_farm(self, farm_id):
         return self.farms.get(farm_id)
 
@@ -74,7 +74,8 @@ class FakeDB:
             "confidence_band": assessment["confidence_band"], "decision": assessment["decision"],
             "escalation_reason": escalation_reason, "why": why, "weather": weather, "risk": risk,
             "farmer_reply": {"language": reply_language, "text": reply_text, "audio_url": None},
-            "status": status, "data_source": data_source, "created_at": "2026-11-12T09:15:00Z"}
+            "status": status, "data_source": data_source, "created_at": "2026-11-12T09:15:00Z",
+            "expert_review": None}
         self.events[rid] = []
         return {"id": rid}
 
@@ -83,6 +84,8 @@ class FakeDB:
         return self.events[report_id][-1]
 
     def get_report(self, report_id):
+        if report_id not in self.reports:
+            return None
         r = dict(self.reports[report_id])
         r["events"] = list(self.events[report_id])
         return r
@@ -119,3 +122,41 @@ class FakeDB:
              "message": message, "delivered": delivered, "data_source": data_source}
         self.alerts.append(a)
         return a
+
+    # ---- added for the route tests
+    def list_farms(self):
+        out = []
+        for fid, f in self.farms.items():
+            out.append({"id": fid, "crop": f["crop"], "area_label": f["area_label"],
+                        "farmer_name": self.farmers[fid]["name"], "language": self.farmers[fid]["language"],
+                        "report_count": len([r for r in self.reports.values() if r["farm_id"] == fid]),
+                        "data_source": f.get("data_source", "live")})
+        return out
+
+    def list_expert_cases(self, status="expert_review_pending"):
+        return [{"report_id": r["id"], "farm_id": r["farm_id"], "crop": r["crop"], "status": r["status"],
+                 "suspected_issue": r["suspected_issue"], "escalation_reason": r.get("escalation_reason")}
+                for r in self.reports.values() if r.get("status") == status]
+
+    def update_report_status(self, report_id, status):
+        self.reports[report_id]["status"] = status
+
+    def insert_expert_review(self, report_id, expert_name, guidance, confirmed_issue):
+        review = {"id": "rev_%04d" % next(_ids), "report_id": report_id, "expert_name": expert_name,
+                  "guidance": guidance, "confirmed_issue": confirmed_issue, "created_at": "2026-11-12T11:02:00Z"}
+        self.reports[report_id]["expert_review"] = review
+        return review
+
+    def get_or_create_farmer(self, telegram_chat_id, name, language):
+        fid = "fmr_sim%d" % next(_ids)
+        self._pending = getattr(self, "_pending", {})
+        self._pending[fid] = {"id": fid, "name": name, "language": language, "telegram_chat_id": telegram_chat_id}
+        return {"id": fid}
+
+    def get_or_create_farm(self, farmer_id, crop, sowing_date=None, area_label=None, lat=None, lng=None,
+                           data_source="live"):
+        farm_id = "farm_sim%d" % next(_ids)
+        self.farms[farm_id] = {"id": farm_id, "farmer_id": farmer_id, "crop": crop, "lat": lat, "lng": lng,
+                               "area_label": area_label, "sowing_date": sowing_date, "data_source": data_source}
+        self.farmers[farm_id] = self._pending[farmer_id]
+        return self.farms[farm_id]

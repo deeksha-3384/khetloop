@@ -1,0 +1,50 @@
+{
+  "_about": "Cached mandi (wholesale market) prices for the KhetLoop prototype. Real figures copied by hand from third-party price aggregator pages that republish mandi data; NOT independently verified and NOT live. The app always labels them 'cached'.",
+  "retrieved_on": "2026-11-13",
+  "prices": [
+    {
+      "crop": "tomato",
+      "market": "Srinivasapur",
+      "district": "Kolar",
+      "price_per_quintal_inr": 1267,
+      "min_price_per_quintal_inr": 733,
+      "max_price_per_quintal_inr": 1933,
+      "price_date": "2026-11-13",
+      "source_name": "mandibhavindia.in",
+      "source_url": "https://mandibhavindia.in/en/commodity/tomato/karnataka/kolar"
+    },
+    {
+      "crop": "tomato",
+      "market": "Bangarpet",
+      "district": "Kolar",
+      "price_per_quintal_inr": 1000,
+      "min_price_per_quintal_inr": 500,
+      "max_price_per_quintal_inr": 1700,
+      "price_date": "2026-11-13",
+      "source_name": "mandibhavindia.in",
+      "source_url": "https://mandibhavindia.in/en/commodity/tomato/karnataka/kolar"
+    },
+    {
+      "crop": "tomato",
+      "market": "Kolar",
+      "district": "Kolar",
+      "price_per_quintal_inr": 1000,
+      "min_price_per_quintal_inr": 300,
+      "max_price_per_quintal_inr": 2000,
+      "price_date": "2026-11-07",
+      "source_name": "mandibhavindia.in",
+      "source_url": "https://mandibhavindia.in/en/commodity/tomato/karnataka/kolar"
+    },
+    {
+      "crop": "potato",
+      "market": "Kolar",
+      "district": "Kolar",
+      "price_per_quintal_inr": 2300,
+      "min_price_per_quintal_inr": 1500,
+      "max_price_per_quintal_inr": 3000,
+      "price_date": "2026-08-19",
+      "source_name": "napanta.com",
+      "source_url": "https://www.napanta.com/commodity-agri-market/karnataka/potato/kolar"
+    }
+  ]
+}

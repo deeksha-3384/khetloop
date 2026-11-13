@@ -1,9 +1,74 @@
 [
-  {"id": "farm_5eed0001", "farmer_id": "fmr_5eed0001", "crop": "tomato", "sowing_date": "2026-10-05", "area_label": "Kolar North", "lat": 13.14, "lng": 78.13},
-  {"id": "farm_5eed0002", "farmer_id": "fmr_5eed0002", "crop": "tomato", "sowing_date": "2026-10-08", "area_label": "Kolar North", "lat": 13.15, "lng": 78.14},
-  {"id": "farm_5eed0003", "farmer_id": "fmr_5eed0003", "crop": "chilli", "sowing_date": "2026-09-28", "area_label": "Chikkaballapur", "lat": 13.43, "lng": 77.73},
-  {"id": "farm_5eed0004", "farmer_id": "fmr_5eed0004", "crop": "tomato", "sowing_date": "2026-10-02", "area_label": "Kolar North", "lat": 13.13, "lng": 78.12},
-  {"id": "farm_5eed0005", "farmer_id": "fmr_5eed0005", "crop": "tomato", "sowing_date": "2026-10-10", "area_label": "Kolar North", "lat": 13.16, "lng": 78.15},
-  {"id": "farm_5eed0006", "farmer_id": "fmr_5eed0006", "crop": "tomato", "sowing_date": "2026-10-12", "area_label": "Srinivaspur", "lat": 13.34, "lng": 78.21},
-  {"id": "farm_5eed0007", "farmer_id": "fmr_5eed0007", "crop": "potato", "sowing_date": "2026-09-20", "area_label": "Hassan", "lat": 13.0, "lng": 76.1}
+  {
+    "id": "farm_5eed0001",
+    "farmer_id": "fmr_5eed0001",
+    "crop": "tomato",
+    "sowing_date": "2026-10-05",
+    "area_label": "Kolar North",
+    "lat": 13.15,
+    "lng": 78.14
+  },
+  {
+    "id": "farm_5eed0002",
+    "farmer_id": "fmr_5eed0002",
+    "crop": "tomato",
+    "sowing_date": "2026-10-08",
+    "area_label": "Kolar North",
+    "lat": 13.13,
+    "lng": 78.12
+  },
+  {
+    "id": "farm_5eed0003",
+    "farmer_id": "fmr_5eed0003",
+    "crop": "chilli",
+    "sowing_date": "2026-09-28",
+    "area_label": "Chikkaballapur",
+    "lat": 13.43,
+    "lng": 77.73
+  },
+  {
+    "id": "farm_5eed0004",
+    "farmer_id": "fmr_5eed0004",
+    "crop": "tomato",
+    "sowing_date": "2026-10-02",
+    "area_label": "Chikkaballapur",
+    "lat": 13.44,
+    "lng": 77.74
+  },
+  {
+    "id": "farm_5eed0005",
+    "farmer_id": "fmr_5eed0005",
+    "crop": "tomato",
+    "sowing_date": "2026-10-10",
+    "area_label": "Chikkaballapur",
+    "lat": 13.42,
+    "lng": 77.72
+  },
+  {
+    "id": "farm_5eed0006",
+    "farmer_id": "fmr_5eed0006",
+    "crop": "tomato",
+    "sowing_date": "2026-10-12",
+    "area_label": "Srinivaspur",
+    "lat": 13.34,
+    "lng": 78.21
+  },
+  {
+    "id": "farm_5eed0007",
+    "farmer_id": "fmr_5eed0007",
+    "crop": "potato",
+    "sowing_date": "2026-09-20",
+    "area_label": "Hassan",
+    "lat": 13.0,
+    "lng": 76.1
+  },
+  {
+    "id": "farm_5eed0008",
+    "farmer_id": "fmr_5eed0008",
+    "crop": "tomato",
+    "sowing_date": "2026-10-06",
+    "area_label": "Chikkaballapur",
+    "lat": 13.41,
+    "lng": 77.73
+  }
 ]

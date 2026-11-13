@@ -1,18 +1,659 @@
 [
-  {"id": "rep_5eed0001", "farm_id": "farm_5eed0001", "image_file": "clear_tomato_01.jpg", "hours_ago": 20, "suspected_issue": "early_blight", "confidence_band": "medium", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": ["brown concentric spots"], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0002", "farm_id": "farm_5eed0002", "image_file": "clear_tomato_01.jpg", "hours_ago": 14, "suspected_issue": "early_blight", "confidence_band": "medium", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": ["brown spots", "yellow rings around spots"], "voice_transcript": "मेरे टमाटर के पत्तों पर भूरे धब्बे आ रहे हैं।", "escalation_reason": null},
-  {"id": "rep_5eed0003", "farm_id": "farm_5eed0004", "image_file": "clear_tomato_01.jpg", "hours_ago": 6, "suspected_issue": "early_blight", "confidence_band": "high", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": ["concentric brown rings", "yellowing around spots"], "voice_transcript": "ನನ್ನ ಟೊಮೆಟೊ ಎಲೆಗಳ ಮೇಲೆ ಕಂದು ಕಲೆಗಳು ಬರುತ್ತಿವೆ.", "escalation_reason": null},
-  {"id": "rep_5eed0004", "farm_id": "farm_5eed0006", "image_file": "clear_tomato_01.jpg", "hours_ago": 10, "suspected_issue": "early_blight", "confidence_band": "medium", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": ["brown spots"], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0005", "farm_id": "farm_5eed0005", "image_file": "blurry_tomato_01.jpg", "hours_ago": 8, "suspected_issue": "unknown", "confidence_band": "low", "image_quality": "poor", "decision": "abstain_request_better_image", "status": "ai_assessed", "visible_symptoms": [], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0006", "farm_id": "farm_5eed0005", "image_file": "clear_tomato_01.jpg", "hours_ago": 100, "suspected_issue": "early_blight", "confidence_band": "medium", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": ["brown spots"], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0007", "farm_id": "farm_5eed0002", "image_file": "clear_tomato_02.jpg", "hours_ago": 5, "suspected_issue": "late_blight", "confidence_band": "medium", "image_quality": "good", "decision": "escalate_to_expert", "status": "expert_review_pending", "visible_symptoms": ["dark water-soaked patches"], "voice_transcript": null, "escalation_reason": "MEDIUM_CONFIDENCE_HIGH_RISK"},
-  {"id": "rep_5eed0008", "farm_id": "farm_5eed0005", "image_file": "clear_tomato_02.jpg", "hours_ago": 3, "suspected_issue": "late_blight", "confidence_band": "medium", "image_quality": "good", "decision": "escalate_to_expert", "status": "expert_review_pending", "visible_symptoms": ["dark water-soaked patches", "leaf edges browning"], "voice_transcript": "ಕಲೆಗಳು ಇಡೀ ಹೊಲದಲ್ಲಿ ಹರಡುತ್ತಿವೆ.", "escalation_reason": "SEVERITY_KEYWORD"},
-  {"id": "rep_5eed0009", "farm_id": "farm_5eed0001", "image_file": "clear_tomato_03.jpg", "hours_ago": 200, "suspected_issue": "healthy", "confidence_band": "high", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": [], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0010", "farm_id": "farm_5eed0006", "image_file": "blurry_tomato_02.jpg", "hours_ago": 40, "suspected_issue": "unknown", "confidence_band": "low", "image_quality": "poor", "decision": "abstain_request_better_image", "status": "ai_assessed", "visible_symptoms": [], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0011", "farm_id": "farm_5eed0006", "image_file": "blurry_tomato_02.jpg", "hours_ago": 39.5, "suspected_issue": "unknown", "confidence_band": "low", "image_quality": "poor", "decision": "escalate_to_expert", "status": "expert_review_pending", "visible_symptoms": [], "voice_transcript": null, "escalation_reason": "UNCLEAR_AFTER_RETRY"},
-  {"id": "rep_5eed0012", "farm_id": "farm_5eed0004", "image_file": "ambiguous_tomato_01.jpg", "hours_ago": 60, "suspected_issue": "unknown", "confidence_band": "low", "image_quality": "good", "decision": "abstain_request_better_image", "status": "ai_assessed", "visible_symptoms": ["small brown lesions, cause unclear"], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0013", "farm_id": "farm_5eed0001", "image_file": "clear_tomato_01.jpg", "hours_ago": 90, "suspected_issue": "early_blight", "confidence_band": "medium", "image_quality": "good", "decision": "preliminary_assessment", "status": "follow_up", "visible_symptoms": ["small brown spots"], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0014", "farm_id": "farm_5eed0004", "image_file": "clear_tomato_03.jpg", "hours_ago": 120, "suspected_issue": "healthy", "confidence_band": "high", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": [], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0015", "farm_id": "farm_5eed0006", "image_file": "clear_tomato_03.jpg", "hours_ago": 150, "suspected_issue": "healthy", "confidence_band": "high", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": [], "voice_transcript": null, "escalation_reason": null},
-  {"id": "rep_5eed0016", "farm_id": "farm_5eed0005", "image_file": "clear_tomato_03.jpg", "hours_ago": 160, "suspected_issue": "healthy", "confidence_band": "medium", "image_quality": "good", "decision": "preliminary_assessment", "status": "ai_assessed", "visible_symptoms": [], "voice_transcript": null, "escalation_reason": null}
+  {
+    "id": "rep_5eed0001",
+    "farm_id": "farm_5eed0004",
+    "image_file": "clear_tomato_01.jpg",
+    "hours_ago": 22,
+    "suspected_issue": "early_blight",
+    "confidence_band": "medium",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "ai_assessed",
+    "visible_symptoms": [
+      "brown concentric spots"
+    ],
+    "voice_transcript": "ನನ್ನ ಟೊಮೆಟೊ ಎಲೆಗಳ ಮೇಲೆ ಕಂದು ಕಲೆಗಳು ಬರುತ್ತಿವೆ.",
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling early blight."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "FARM_HISTORY",
+        "text": "This farm has 1 earlier report on its timeline."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 9.6,
+      "humidity_pct_avg": 78,
+      "temp_c_avg": 25.1,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "elevated",
+      "reasons": [
+        "Rain forecast"
+      ]
+    },
+    "reply_language": "kn",
+    "reply_text": "ನಿಮ್ಮ ಟೊಮೆಟೊ ಎಲೆಯ ಲಕ್ಷಣಗಳು ಅರ್ಲಿ ಬ್ಲೈಟ್ ರೋಗವನ್ನು ಹೋಲುತ್ತವೆ. ಇದು ಪ್ರಾಥಮಿಕ ಮೌಲ್ಯಮಾಪನ, ದೃಢೀಕೃತ ರೋಗನಿರ್ಣಯವಲ್ಲ. ಬಾಧಿತ ಎಲೆಗಳನ್ನು ಜಾಗರೂಕತೆಯಿಂದ ತೆಗೆದು ಹೊಲದಿಂದ ದೂರ ನಾಶಪಡಿಸಿ. ಎಲೆಗಳನ್ನು ಒಣಗಿಸಿಡಿ; ನೀರನ್ನು ಗಿಡದ ಬುಡಕ್ಕೆ ಕೊಡಿ, ಎಲೆಗಳ ಮೇಲೆ ಅಲ್ಲ. ಗಿಡಗಳ ನಡುವೆ ಸಾಕಷ್ಟು ಅಂತರ ಇರಲಿ, ಗಾಳಿ ಚೆನ್ನಾಗಿ ಆಡಲಿ; ಒದ್ದೆ ಗಿಡಗಳ ನಡುವೆ ಕೆಲಸ ಮಾಡಬೇಡಿ."
+  },
+  {
+    "id": "rep_5eed0002",
+    "farm_id": "farm_5eed0005",
+    "image_file": "clear_tomato_01.jpg",
+    "hours_ago": 15,
+    "suspected_issue": "early_blight",
+    "confidence_band": "medium",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "ai_assessed",
+    "visible_symptoms": [
+      "brown spots",
+      "yellow rings around spots"
+    ],
+    "voice_transcript": "ನನ್ನ ಟೊಮೆಟೊ ಎಲೆಗಳ ಮೇಲೆ ಕಂದು ಕಲೆಗಳು ಬರುತ್ತಿವೆ.",
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling early blight."
+      },
+      {
+        "code": "NEARBY_REPORTS",
+        "text": "1 similar report was submitted nearby in the last 72 hours."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "FARM_HISTORY",
+        "text": "This farm has 1 earlier report on its timeline."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 9.6,
+      "humidity_pct_avg": 78,
+      "temp_c_avg": 25.1,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "elevated",
+      "reasons": [
+        "Similar reports nearby",
+        "Rain forecast"
+      ]
+    },
+    "reply_language": "kn",
+    "reply_text": "ನಿಮ್ಮ ಟೊಮೆಟೊ ಎಲೆಯ ಲಕ್ಷಣಗಳು ಅರ್ಲಿ ಬ್ಲೈಟ್ ರೋಗವನ್ನು ಹೋಲುತ್ತವೆ. ಇದು ಪ್ರಾಥಮಿಕ ಮೌಲ್ಯಮಾಪನ, ದೃಢೀಕೃತ ರೋಗನಿರ್ಣಯವಲ್ಲ. ಬಾಧಿತ ಎಲೆಗಳನ್ನು ಜಾಗರೂಕತೆಯಿಂದ ತೆಗೆದು ಹೊಲದಿಂದ ದೂರ ನಾಶಪಡಿಸಿ. ಎಲೆಗಳನ್ನು ಒಣಗಿಸಿಡಿ; ನೀರನ್ನು ಗಿಡದ ಬುಡಕ್ಕೆ ಕೊಡಿ, ಎಲೆಗಳ ಮೇಲೆ ಅಲ್ಲ. ಗಿಡಗಳ ನಡುವೆ ಸಾಕಷ್ಟು ಅಂತರ ಇರಲಿ, ಗಾಳಿ ಚೆನ್ನಾಗಿ ಆಡಲಿ; ಒದ್ದೆ ಗಿಡಗಳ ನಡುವೆ ಕೆಲಸ ಮಾಡಬೇಡಿ."
+  },
+  {
+    "id": "rep_5eed0003",
+    "farm_id": "farm_5eed0008",
+    "image_file": "clear_tomato_01.jpg",
+    "hours_ago": 7,
+    "suspected_issue": "early_blight",
+    "confidence_band": "high",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "ai_assessed",
+    "visible_symptoms": [
+      "concentric brown rings",
+      "yellowing around spots"
+    ],
+    "voice_transcript": "There are brown spots on my tomato leaves.",
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling early blight."
+      },
+      {
+        "code": "NEARBY_REPORTS",
+        "text": "2 similar reports were submitted nearby in the last 72 hours."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "FARM_HISTORY",
+        "text": "This farm has 1 earlier report on its timeline."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 9.6,
+      "humidity_pct_avg": 78,
+      "temp_c_avg": 25.1,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "elevated",
+      "reasons": [
+        "Similar reports nearby",
+        "Rain forecast"
+      ]
+    },
+    "reply_language": "en",
+    "reply_text": "Your tomato leaf shows symptoms that resemble early blight. This is a preliminary assessment, not a confirmed diagnosis. Remove the affected leaves carefully and dispose of them away from the field. Keep leaves dry by watering at the base of the plant instead of over the leaves. Give plants enough space for good airflow, and avoid working among wet plants."
+  },
+  {
+    "id": "rep_5eed0004",
+    "farm_id": "farm_5eed0006",
+    "image_file": "clear_tomato_01.jpg",
+    "hours_ago": 12,
+    "suspected_issue": "early_blight",
+    "confidence_band": "medium",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "ai_assessed",
+    "visible_symptoms": [
+      "brown spots"
+    ],
+    "voice_transcript": null,
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling early blight."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "No significant rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": false,
+      "rain_mm_next_48h": 0.8,
+      "humidity_pct_avg": 66,
+      "temp_c_avg": 27.3,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "normal",
+      "reasons": []
+    },
+    "reply_language": "hi",
+    "reply_text": "आपके टमाटर के पत्ते के लक्षण अगेती झुलसा जैसे दिखते हैं। यह एक प्रारंभिक आकलन है, पुष्ट निदान नहीं। प्रभावित पत्तियों को सावधानी से तोड़कर खेत से दूर नष्ट करें। पत्तियों को सूखा रखें; पानी पौधे की जड़ के पास दें, पत्तियों पर नहीं। पौधों के बीच पर्याप्त दूरी रखें ताकि हवा अच्छी तरह चले, और गीले पौधों के बीच काम न करें।"
+  },
+  {
+    "id": "rep_5eed0005",
+    "farm_id": "farm_5eed0001",
+    "image_file": "clear_tomato_03.jpg",
+    "hours_ago": 59,
+    "suspected_issue": "healthy",
+    "confidence_band": "high",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "ai_assessed",
+    "visible_symptoms": [],
+    "voice_transcript": null,
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows no clear disease symptoms."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 12.4,
+      "humidity_pct_avg": 82,
+      "temp_c_avg": 24.5,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "normal",
+      "reasons": []
+    },
+    "reply_language": "kn",
+    "reply_text": "ನಿಮ್ಮ {crop} ಎಲೆ ಆರೋಗ್ಯವಾಗಿ ಕಾಣುತ್ತಿದೆ. ಇದು ಪ್ರಾಥಮಿಕ ಮೌಲ್ಯಮಾಪನ, ದೃಢೀಕೃತ ರೋಗನಿರ್ಣಯವಲ್ಲ."
+  },
+  {
+    "id": "rep_5eed0006",
+    "farm_id": "farm_5eed0001",
+    "image_file": "clear_tomato_05.jpg",
+    "hours_ago": 56,
+    "suspected_issue": "leaf_curl",
+    "confidence_band": "medium",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "follow_up",
+    "visible_symptoms": [
+      "curled upward leaf edges"
+    ],
+    "voice_transcript": null,
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling leaf curl."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "FARM_HISTORY",
+        "text": "This farm has 1 earlier report on its timeline."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 12.4,
+      "humidity_pct_avg": 82,
+      "temp_c_avg": 24.5,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "elevated",
+      "reasons": [
+        "Rain forecast"
+      ]
+    },
+    "reply_language": "kn",
+    "reply_text": "ನಿಮ್ಮ ಟೊಮೆಟೊ ಎಲೆಯ ಲಕ್ಷಣಗಳು ಎಲೆ ಸುರುಳಿ (ಲೀಫ್ ಕರ್ಲ್) ರೋಗವನ್ನು ಹೋಲುತ್ತವೆ. ಇದು ಪ್ರಾಥಮಿಕ ಮೌಲ್ಯಮಾಪನ, ದೃಢೀಕೃತ ರೋಗನಿರ್ಣಯವಲ್ಲ. ಎಲೆಗಳ ಕೆಳಭಾಗದಲ್ಲಿ ಸಣ್ಣ ಬಿಳಿ ಹಾರುವ ಕೀಟಗಳಿವೆಯೇ ನೋಡಿ ಮತ್ತು ಕಂಡದ್ದನ್ನು ಗಮನಿಸಿ. ತುಂಬಾ ಸುರುಳಿಯಾದ ಗಿಡಗಳನ್ನು ತೆಗೆದು, ಹೊಲದ ಸುತ್ತ ಕಳೆ ಕಡಿಮೆ ಇಡಿ. ನಿಯಮಿತವಾಗಿ ನೀರು ಕೊಡಿ, ಏಕೆಂದರೆ ಬಿಸಿಲು ಮತ್ತು ನೀರಿನ ಕೊರತೆಯಿಂದಲೂ ಎಲೆಗಳು ಸುರುಳಿಯಾಗಬಹುದು."
+  },
+  {
+    "id": "rep_5eed0007",
+    "farm_id": "farm_5eed0002",
+    "image_file": "clear_tomato_04.jpg",
+    "hours_ago": 18,
+    "suspected_issue": "bacterial_spot",
+    "confidence_band": "medium",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "ai_assessed",
+    "visible_symptoms": [
+      "small dark spots with yellow halo"
+    ],
+    "voice_transcript": "मेरे टमाटर के पत्तों पर भूरे धब्बे आ रहे हैं।",
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling bacterial spot."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 12.4,
+      "humidity_pct_avg": 82,
+      "temp_c_avg": 24.5,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "elevated",
+      "reasons": [
+        "Rain forecast"
+      ]
+    },
+    "reply_language": "hi",
+    "reply_text": "आपके टमाटर के पत्ते के लक्षण जीवाणु पत्ती धब्बा जैसे दिखते हैं। यह एक प्रारंभिक आकलन है, पुष्ट निदान नहीं। गीले पौधों को छूने या उनके बीच काम करने से बचें, क्योंकि पानी और औज़ार समस्या को एक पौधे से दूसरे में ले जा सकते हैं। बहुत प्रभावित पत्तियों को हटाकर खेत से दूर रखें। पानी पौधों की जड़ के पास दें और पत्तियों पर छींटे न पड़ने दें।"
+  },
+  {
+    "id": "rep_5eed0008",
+    "farm_id": "farm_5eed0002",
+    "image_file": "clear_tomato_02.jpg",
+    "hours_ago": 5,
+    "suspected_issue": "late_blight",
+    "confidence_band": "medium",
+    "image_quality": "good",
+    "decision": "escalate_to_expert",
+    "status": "expert_review_pending",
+    "visible_symptoms": [
+      "dark water-soaked patches"
+    ],
+    "voice_transcript": null,
+    "escalation_reason": "MEDIUM_CONFIDENCE_HIGH_RISK",
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling late blight."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "FARM_HISTORY",
+        "text": "This farm has 1 earlier report on its timeline."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 12.4,
+      "humidity_pct_avg": 82,
+      "temp_c_avg": 24.5,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "elevated",
+      "reasons": [
+        "Rain forecast"
+      ]
+    },
+    "reply_language": "hi",
+    "reply_text": "आपकी रिपोर्ट कृषि विशेषज्ञ को समीक्षा के लिए भेज दी गई है। यह एक प्रारंभिक आकलन है, पुष्ट निदान नहीं।"
+  },
+  {
+    "id": "rep_5eed0009",
+    "farm_id": "farm_5eed0001",
+    "image_file": "blurry_tomato_01.jpg",
+    "hours_ago": 9,
+    "suspected_issue": "unknown",
+    "confidence_band": "low",
+    "image_quality": "poor",
+    "decision": "abstain_request_better_image",
+    "status": "ai_assessed",
+    "visible_symptoms": [],
+    "voice_transcript": null,
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_QUALITY",
+        "text": "The photo was too blurry or unclear to assess reliably."
+      },
+      {
+        "code": "LOW_CONFIDENCE",
+        "text": "The assessment confidence is low, so no specific issue is suggested."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "FARM_HISTORY",
+        "text": "This farm has 2 earlier reports on its timeline."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 12.4,
+      "humidity_pct_avg": 82,
+      "temp_c_avg": 24.5,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "normal",
+      "reasons": []
+    },
+    "reply_language": "kn",
+    "reply_text": "ಫೋಟೋ ಸ್ಪಷ್ಟವಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ಎಲೆಯ ಸ್ಪಷ್ಟ ಫೋಟೋವನ್ನು ಮತ್ತೆ ಕಳುಹಿಸಿ."
+  },
+  {
+    "id": "rep_5eed0010",
+    "farm_id": "farm_5eed0001",
+    "image_file": "blurry_tomato_02.jpg",
+    "hours_ago": 8.5,
+    "suspected_issue": "unknown",
+    "confidence_band": "low",
+    "image_quality": "poor",
+    "decision": "escalate_to_expert",
+    "status": "expert_review_pending",
+    "visible_symptoms": [],
+    "voice_transcript": null,
+    "escalation_reason": "UNCLEAR_AFTER_RETRY",
+    "why": [
+      {
+        "code": "IMAGE_QUALITY",
+        "text": "The photo was too blurry or unclear to assess reliably."
+      },
+      {
+        "code": "LOW_CONFIDENCE",
+        "text": "The assessment confidence is low, so no specific issue is suggested."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "FARM_HISTORY",
+        "text": "This farm has 3 earlier reports on its timeline."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 12.4,
+      "humidity_pct_avg": 82,
+      "temp_c_avg": 24.5,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "normal",
+      "reasons": []
+    },
+    "reply_language": "kn",
+    "reply_text": "ನಿಮ್ಮ ವರದಿಯನ್ನು ಕೃಷಿ ತಜ್ಞರಿಗೆ ಕಳುಹಿಸಲಾಗಿದೆ. ಅವರು ಪರಿಶೀಲಿಸುತ್ತಾರೆ. ಇದು ಪ್ರಾಥಮಿಕ ಮೌಲ್ಯಮಾಪನ, ದೃಢೀಕೃತ ರೋಗನಿರ್ಣಯವಲ್ಲ."
+  },
+  {
+    "id": "rep_5eed0011",
+    "farm_id": "farm_5eed0006",
+    "image_file": "clear_tomato_01.jpg",
+    "hours_ago": 3,
+    "suspected_issue": "early_blight",
+    "confidence_band": "medium",
+    "image_quality": "good",
+    "decision": "escalate_to_expert",
+    "status": "expert_review_pending",
+    "visible_symptoms": [
+      "brown spots",
+      "leaf edges browning"
+    ],
+    "voice_transcript": "पत्तों पर धब्बे तेजी से फैल रहे हैं।",
+    "escalation_reason": "SEVERITY_KEYWORD",
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows visible symptoms resembling early blight."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "No significant rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "FARM_HISTORY",
+        "text": "This farm has 1 earlier report on its timeline."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": false,
+      "rain_mm_next_48h": 0.8,
+      "humidity_pct_avg": 66,
+      "temp_c_avg": 27.3,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "normal",
+      "reasons": []
+    },
+    "reply_language": "hi",
+    "reply_text": "आपकी रिपोर्ट कृषि विशेषज्ञ को समीक्षा के लिए भेज दी गई है। यह एक प्रारंभिक आकलन है, पुष्ट निदान नहीं।"
+  },
+  {
+    "id": "rep_5eed0012",
+    "farm_id": "farm_5eed0005",
+    "image_file": "ambiguous_tomato_01.jpg",
+    "hours_ago": 40,
+    "suspected_issue": "unknown",
+    "confidence_band": "low",
+    "image_quality": "good",
+    "decision": "abstain_request_better_image",
+    "status": "ai_assessed",
+    "visible_symptoms": [
+      "small brown lesions, cause unclear"
+    ],
+    "voice_transcript": null,
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "LOW_CONFIDENCE",
+        "text": "The assessment confidence is low, so no specific issue is suggested."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 9.6,
+      "humidity_pct_avg": 78,
+      "temp_c_avg": 25.1,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "normal",
+      "reasons": []
+    },
+    "reply_language": "kn",
+    "reply_text": "ಫೋಟೋ ಸ್ಪಷ್ಟವಾಗಿಲ್ಲ. ದಯವಿಟ್ಟು ಎಲೆಯ ಸ್ಪಷ್ಟ ಫೋಟೋವನ್ನು ಮತ್ತೆ ಕಳುಹಿಸಿ."
+  },
+  {
+    "id": "rep_5eed0013",
+    "farm_id": "farm_5eed0004",
+    "image_file": "clear_tomato_03.jpg",
+    "hours_ago": 50,
+    "suspected_issue": "healthy",
+    "confidence_band": "high",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "ai_assessed",
+    "visible_symptoms": [],
+    "voice_transcript": null,
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows no clear disease symptoms."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 9.6,
+      "humidity_pct_avg": 78,
+      "temp_c_avg": 25.1,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "normal",
+      "reasons": []
+    },
+    "reply_language": "kn",
+    "reply_text": "ನಿಮ್ಮ {crop} ಎಲೆ ಆರೋಗ್ಯವಾಗಿ ಕಾಣುತ್ತಿದೆ. ಇದು ಪ್ರಾಥಮಿಕ ಮೌಲ್ಯಮಾಪನ, ದೃಢೀಕೃತ ರೋಗನಿರ್ಣಯವಲ್ಲ."
+  },
+  {
+    "id": "rep_5eed0014",
+    "farm_id": "farm_5eed0008",
+    "image_file": "clear_tomato_03.jpg",
+    "hours_ago": 45,
+    "suspected_issue": "healthy",
+    "confidence_band": "medium",
+    "image_quality": "good",
+    "decision": "preliminary_assessment",
+    "status": "ai_assessed",
+    "visible_symptoms": [],
+    "voice_transcript": null,
+    "escalation_reason": null,
+    "why": [
+      {
+        "code": "IMAGE_SYMPTOMS",
+        "text": "The photo shows no clear disease symptoms."
+      },
+      {
+        "code": "WEATHER_CONTEXT",
+        "text": "Rain is forecast in the next 48 hours (simulated forecast)."
+      },
+      {
+        "code": "NOT_CONFIRMED",
+        "text": "This is a preliminary assessment, not a confirmed diagnosis."
+      }
+    ],
+    "weather": {
+      "rain_expected": true,
+      "rain_mm_next_48h": 9.6,
+      "humidity_pct_avg": 78,
+      "temp_c_avg": 25.1,
+      "data_source": "simulated"
+    },
+    "risk": {
+      "level": "normal",
+      "reasons": []
+    },
+    "reply_language": "en",
+    "reply_text": "Your {crop} leaf looks healthy. This is a preliminary assessment, not a confirmed diagnosis."
+  }
 ]

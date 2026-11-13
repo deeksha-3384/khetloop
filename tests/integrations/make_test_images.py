@@ -6,6 +6,7 @@ Usage (repo root, venv active):
 Expects exactly one downloaded photo (any file name) in each of these folders:
     tmp/originals/early_blight/    tmp/originals/late_blight/
     tmp/originals/healthy/         tmp/originals/target_spot/
+    tmp/originals/bacterial_spot/  tmp/originals/leaf_curl/
 Writes resized JPEGs and LABELS.csv into data/test_images/. The original file name of
 each photo is recorded in LABELS.csv (source_file) so its origin can be traced.
 """
@@ -39,6 +40,12 @@ PHOTOS = [
     ("target_spot", "ambiguous_tomato_01.jpg", "ambiguous", "target_spot (not in KhetLoop issue list)",
      "abstain_request_better_image or escalate_to_expert (should not give a confident known issue)",
      "Disease outside our issue list; lesions can look like early blight"),
+    ("bacterial_spot", "clear_tomato_04.jpg", "clear", "bacterial_spot",
+     "preliminary_assessment",
+     "Used by the seed data (Kolar North bacterial spot report)"),
+    ("leaf_curl", "clear_tomato_05.jpg", "clear", "tomato_yellow_leaf_curl_virus (mapped to leaf_curl)",
+     "preliminary_assessment",
+     "Used by the seed data (Kolar North leaf curl report); PlantVillage class is yellow leaf curl virus"),
 ]
 # (source output name, blurry output name)
 BLURRY = [

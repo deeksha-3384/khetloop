@@ -3,11 +3,11 @@
  */
 
 // Flask backend base URL (API_BASE_URL in .env.example)
-const API_BASE = "http://localhost:5000";
+const API_BASE = "http://localhost:5001";
 
 // true  = read mock JSON files from MOCK_BASE (no backend needed)
 // false = call the real Flask API at API_BASE
-const USE_MOCK = true;
+const USE_MOCK = false;
 
 // Value of the X-Expert-Key header (EXPERT_API_KEY in .env.example).
 // This is the demo key from the contract, not a Supabase key.

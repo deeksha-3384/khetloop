@@ -3,7 +3,7 @@
  */
 
 // Flask backend base URL (API_BASE_URL in .env.example)
-const API_BASE = "http://localhost:5001";
+const API_BASE = "http://localhost:5000";
 
 // true  = read mock JSON files from MOCK_BASE (no backend needed)
 // false = call the real Flask API at API_BASE

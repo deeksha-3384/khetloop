@@ -1,4 +1,4 @@
-"""Seed loader for KhetLoop (Person 2).
+﻿"""Seed loader for KhetLoop (Person 2).
 
 Reads data/seed/farmers.json, farms.json and reports.json and loads them as
 SIMULATED data. Run from the project root:
@@ -44,6 +44,8 @@ STATUS_EVENTS = {
     "ai_assessed": [("submitted", "farmer"), ("ai_assessed", "ai")],
     "expert_review_pending": [("submitted", "farmer"), ("ai_assessed", "ai"),
                               ("expert_review_pending", "rules")],
+    "follow_up": [("submitted", "farmer"), ("ai_assessed", "ai"),
+                  ("expert_review_pending", "rules"), ("follow_up", "system")],
 }
 
 

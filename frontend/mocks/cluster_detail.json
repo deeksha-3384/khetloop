@@ -1,0 +1,23 @@
+{
+  "ok": true,
+  "data": {
+    "cluster": {
+      "id": "clu_1a2b3c4d", "crop": "tomato", "suspected_issue": "early_blight", "area_label": "Kolar North",
+      "centroid_lat": 13.14, "centroid_lng": 78.13, "severity": "watch", "report_count": 3,
+      "window_hours": 72, "label": "potential_cluster", "data_source": "simulated",
+      "created_at": "2026-11-10T09:20:00Z"
+    },
+    "reports": [
+      { "report_id": "rep_11aa22bb", "created_at": "2026-11-10T06:10:00Z", "crop": "tomato", "suspected_issue": "early_blight", "confidence_band": "medium", "area_label": "Kolar North", "image_url": "/frontend/assets/img/leaf-macro.jpg" },
+      { "report_id": "rep_33cc44dd", "created_at": "2026-11-10T07:25:00Z", "crop": "tomato", "suspected_issue": "early_blight", "confidence_band": "high", "area_label": "Kolar North", "image_url": "/frontend/assets/img/leaf-macro.jpg" },
+      { "report_id": "rep_55ee66ff", "created_at": "2026-11-10T09:05:00Z", "crop": "tomato", "suspected_issue": "early_blight", "confidence_band": "medium", "area_label": "Kolar North", "image_url": "/frontend/assets/img/leaf-macro.jpg" }
+    ],
+    "alerts": [
+      {
+        "id": "alt_7d8e9f0a", "cluster_id": "clu_1a2b3c4d", "farm_id": "farm_4a5b6c7d",
+        "message": "Crop health notice: several recent reports of similar tomato leaf symptoms were recorded near Kolar North. This is not a confirmed diagnosis. Please inspect your plants and send a photo if you notice similar symptoms.",
+        "channel": "telegram", "delivered": true, "sent_at": "2026-11-10T09:21:00Z", "data_source": "simulated"
+      }
+    ]
+  }
+}

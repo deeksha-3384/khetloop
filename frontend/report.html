@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Report | KhetLoop</title>
+  <link rel="icon" type="image/png" href="assets/img/logo-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/config.js"></script>
+  <script src="js/constants.js"></script>
+  <script src="js/ui.js"></script>
+
+  <style>
+    .back { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .25s, transform .25s var(--ease); }
+    .back:hover { color: var(--lime); transform: translateX(-4px); }
+    .report-head { display: grid; gap: 16px; margin-bottom: 30px; }
+    .report-head h1 { font-size: clamp(38px, 5vw, 60px); }
+    .report-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+    .col { display: grid; gap: 22px; }
+
+    .outcome { display: flex; gap: 16px; align-items: flex-start; padding: 18px 22px; border-radius: var(--radius); border: 1px solid var(--border-strong); background: rgba(163, 214, 92, .07); margin-bottom: 22px; }
+    .outcome.is-abstain { border-color: rgba(224, 184, 76, .45); background: rgba(224, 184, 76, .07); }
+    .outcome.is-escalate { border-color: rgba(143, 180, 217, .45); background: rgba(143, 180, 217, .07); }
+    .outcome strong { display: block; font-family: var(--font-display); font-size: 24px; font-weight: 600; }
+    .outcome p { color: var(--muted); font-size: 14px; }
+    .outcome-icon { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; border: 1.5px solid currentColor; color: var(--lime); }
+    .outcome.is-abstain .outcome-icon { color: var(--warn); }
+    .outcome.is-escalate .outcome-icon { color: #8fb4d9; }
+
+    .photo { position: relative; aspect-ratio: 4 / 3; border-radius: var(--radius); overflow: hidden; background: var(--surface-2); border: 1px solid var(--border); }
+    .photo img { width: 100%; height: 100%; object-fit: cover; }
+    .quote { padding: 14px 16px; border-left: 2px solid var(--lime); border-radius: 0 12px 12px 0; background: rgba(163, 214, 92, .06); font-size: 16px; line-height: 1.7; }
+    .lang-tag { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+
+    .issue-line { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .issue-line strong { font-family: var(--font-display); font-size: 34px; font-weight: 600; line-height: 1.1; }
+    .confirmed { padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(111, 224, 166, .45); background: rgba(111, 224, 166, .07); color: #9af0c4; font-size: 14px; }
+    .not-confirmed { font-size: 13px; color: var(--muted); }
+    .kv2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+    .kv2 span { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
+    .kv2 b { font-weight: 600; }
+    .wx { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .wx-tile { padding: 14px; border-radius: 12px; background: rgba(255, 255, 255, .03); border: 1px solid var(--border); }
+    .wx-tile span { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+    .wx-tile b { font-family: var(--font-display); font-size: 30px; font-weight: 600; line-height: 1.2; }
+    .reasons { margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 14px; display: grid; gap: 4px; }
+    .guidance { font-size: 16px; line-height: 1.7; }
+    .small { font-size: 12.5px; color: var(--faint); }
+
+    @media (max-width: 900px) { .report-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="container">
+      <div id="root"></div>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/components/dataSourceBadge.js"></script>
+  <script src="js/components/statusTimeline.js"></script>
+  <script src="js/components/whyBox.js"></script>
+  <script src="js/components/reportCard.js"></script>
+  <script>
+    UI.mountNavbar("");
+    UI.mountFooter();
+
+    var root = document.getElementById("root");
+    var reportId = UI.getParam("id");
+
+    function isNum(v) { return typeof v === "number" && isFinite(v); }
+    function dash(v, suffix) { return isNum(v) ? v + (suffix || "") : "\u2014"; }
+
+    function outcomeBanner(decision) {
+      var map = {
+        preliminary_assessment: { cls: "", icon: "\u2713", title: "Preliminary assessment",
+          text: "The AI gave a first assessment from the photo. It is not a confirmed diagnosis." },
+        abstain_request_better_image: { cls: "is-abstain", icon: "!", title: "A clearer photo was requested",
+          text: "The evidence was too weak to assess, so the AI did not guess. The farmer was asked to send a better photo." },
+        escalate_to_expert: { cls: "is-escalate", icon: "\u2192", title: "Escalated to an agricultural expert",
+          text: "Rules sent this case for human review. The assessment below is preliminary." }
+      };
+      var o = map[decision];
+      if (!o) return "";
+      return '<div class="outcome ' + o.cls + ' reveal"><span class="outcome-icon">' + o.icon + "</span><div><strong>" +
+        UI.esc(o.title) + "</strong><p>" + UI.esc(o.text) + "</p></div></div>";
+    }
+
+    function confidenceHtml(band) {
+      var levels = { high: 3, medium: 2, low: 1 };
+      var lvl = levels[band] || 0;
+      if (!lvl) return "<b>\u2014</b>";
+      var bars = "";
+      for (var i = 1; i <= 3; i++) bars += '<i class="' + (i <= lvl ? "on" : "") + '"></i>';
+      return '<span class="conf conf-' + UI.esc(band) + '"><span class="conf-bars">' + bars + "</span>" +
+        UI.esc(UI.label(CONFIDENCE_LABELS, band)) + "</span>";
+    }
+
+    function assessmentCard(r) {
+      var a = r.assessment || {};
+      var symptoms = Array.isArray(a.visible_symptoms) ? a.visible_symptoms : [];
+      var confirmedBox = "";
+      if (a.confirmed === true && r.expert_review) {
+        confirmedBox = '<div class="confirmed">Confirmed by ' + UI.esc(r.expert_review.expert_name || "an expert") +
+          ": " + UI.esc(UI.label(ISSUE_LABELS, r.expert_review.confirmed_issue)) + "</div>";
+      }
+      return '<div class="card reveal"><div class="card-title">AI assessment</div><div class="stack">' +
+        '<div class="issue-line"><strong>' + UI.esc(UI.label(ISSUE_LABELS, a.suspected_issue)) + "</strong>" +
+        '<span class="chip">' + UI.esc(UI.label(DECISION_LABELS, a.decision)) + "</span></div>" +
+        confirmedBox +
+        '<div class="kv2">' +
+        '<div><span>Model-reported confidence</span>' + confidenceHtml(a.confidence_band) + "</div>" +
+        "<div><span>Photo quality</span><b>" + UI.esc(a.image_quality === "good" ? "Good" : a.image_quality === "poor" ? "Poor" : "\u2014") + "</b></div></div>" +
+        "<div><div class=\"card-title\" style=\"margin-bottom:8px\">Visible symptoms</div>" +
+        (symptoms.length
+          ? '<div class="row" style="gap:8px">' + symptoms.map(function (s) { return '<span class="chip chip-lime">' + UI.esc(s) + "</span>"; }).join("") + "</div>"
+          : '<div class="muted" style="font-size:14px">No visible symptoms were recorded.</div>') + "</div>" +
+        (a.confirmed === true ? "" : '<p class="not-confirmed">This is a preliminary assessment, not a confirmed diagnosis. Confidence is reported by the model and is not calibrated.</p>') +
+        "</div></div>";
+    }
+
+    function weatherCard(w) {
+      var head = '<div class="row between" style="margin-bottom:14px"><div class="card-title" style="margin:0">Weather context</div>' +
+                 (w ? dataSourceBadge(w.data_source) : "") + "</div>";
+      if (!w) {
+        return '<div class="card reveal">' + head +
+          '<div class="empty empty-sm">Weather data was not available for this report.</div></div>';
+      }
+      var rain = w.rain_expected === true ? "Yes" : w.rain_expected === false ? "No" : "\u2014";
+      return '<div class="card reveal">' + head + '<div class="wx">' +
+        '<div class="wx-tile"><span>Rain expected</span><b>' + rain + "</b></div>" +
+        '<div class="wx-tile"><span>Rain, next 48 h</span><b>' + dash(w.rain_mm_next_48h, " mm") + "</b></div>" +
+        '<div class="wx-tile"><span>Avg humidity</span><b>' + dash(w.humidity_pct_avg, "%") + "</b></div>" +
+        '<div class="wx-tile"><span>Avg temperature</span><b>' + dash(w.temp_c_avg, "\u00b0C") + "</b></div></div>" +
+        '<p class="small" style="margin-top:12px">Fetched ' + UI.esc(UI.formatDateTime(w.fetched_at)) + "</p></div>";
+    }
+
+    function riskCard(risk) {
+      var body;
+      if (!risk) {
+        body = '<div class="empty empty-sm">A risk indicator was not available for this report.</div>';
+      } else {
+        var elevated = risk.level === "elevated";
+        var reasons = Array.isArray(risk.reasons) ? risk.reasons : [];
+        body = '<span class="chip ' + (elevated ? "chip-warn" : "chip-lime") + '" style="font-size:13px">' +
+          (elevated ? "Elevated risk" : "Normal risk") + "</span>" +
+          (reasons.length ? '<ul class="reasons">' + reasons.map(function (x) { return "<li>" + UI.esc(x) + "</li>"; }).join("") + "</ul>"
+                          : '<p class="muted" style="margin-top:10px;font-size:14px">No risk factors were listed.</p>');
+      }
+      return '<div class="card reveal"><div class="card-title">Risk indicator</div>' + body + "</div>";
+    }
+
+    function expertCard(rev, status) {
+      if (!rev) {
+        var waiting = status === "expert_review_pending";
+        return '<div class="card reveal"><div class="card-title">Expert review</div><div class="empty empty-sm">' +
+          (waiting ? "Waiting for an agricultural expert to review this case." : "No expert review has been recorded for this report.") +
+          "</div></div>";
+      }
+      return '<div class="card reveal"><div class="row between" style="margin-bottom:14px"><div class="card-title" style="margin:0">Expert review</div>' +
+        '<span class="pill pill-expert_reviewed">Expert Reviewed</span></div>' +
+        '<p class="guidance">' + UI.esc(rev.guidance) + "</p>" +
+        '<hr class="divider"><div class="kv2">' +
+        "<div><span>Reviewed by</span><b>" + UI.esc(rev.expert_name || "\u2014") + "</b></div>" +
+        "<div><span>Confirmed issue</span><b>" + UI.esc(UI.label(ISSUE_LABELS, rev.confirmed_issue)) + "</b></div>" +
+        '<div style="grid-column:1/-1"><span>Reviewed on</span><b>' + UI.esc(UI.formatDateTime(rev.created_at)) + "</b></div></div></div>";
+    }
+
+    function render(r) {
+      var a = r.assessment || {};
+      document.title = UI.label(ISSUE_LABELS, a.suspected_issue) + " | KhetLoop report";
+
+      var lang = r.voice_language || "en";
+      var replyLang = (r.farmer_reply && r.farmer_reply.language) || lang;
+      var transcript = r.voice_transcript
+        ? '<div class="quote" lang="' + UI.esc(lang) + '">' + UI.esc(r.voice_transcript) + "</div>"
+        : '<div class="empty empty-sm">No voice note or description was recorded.</div>';
+      var reply = (r.farmer_reply && r.farmer_reply.text)
+        ? '<div class="quote" lang="' + UI.esc(replyLang) + '">' + UI.esc(r.farmer_reply.text) + "</div>"
+        : '<div class="empty empty-sm">No reply has been recorded.</div>';
+
+      root.innerHTML =
+        '<a class="back" href="' + (r.farm_id ? "timeline.html?farm_id=" + encodeURIComponent(r.farm_id) : "index.html") + '">&larr; ' +
+        (r.farm_id ? "Farm timeline" : "Home") + "</a>" +
+        '<div class="report-head" style="margin-top:18px">' +
+        '<span class="eyebrow">' + UI.esc(UI.label(CROP_LABELS, r.crop)) + " report</span>" +
+        "<h1>" + UI.esc(UI.label(ISSUE_LABELS, a.suspected_issue)) + "</h1>" +
+        '<div class="row"><span class="pill pill-' + UI.esc(r.status) + '">' + UI.esc(UI.label(STATUS_LABELS, r.status)) + "</span>" +
+        dataSourceBadge(r.data_source) +
+        '<span class="muted" style="font-size:14px">Submitted ' + UI.esc(UI.formatDateTime(r.created_at)) + "</span>" +
+        '<span class="mono faint" style="font-size:12px">' + UI.esc(r.id) + "</span></div></div>" +
+        outcomeBanner(a.decision) +
+        '<div class="report-layout"><div class="col">' +
+        '<div class="card reveal"><div class="card-title">Leaf photo</div><div class="photo">' + UI.img(r.image_url, "Leaf photo submitted by the farmer") + "</div></div>" +
+        '<div class="card reveal"><div class="card-title">Farmer\u2019s voice note <span class="lang-tag">\u00b7 ' + UI.esc(UI.label(LANGUAGE_LABELS, lang)) + "</span></div>" + transcript + "</div>" +
+        '<div class="card reveal"><div class="card-title">Reply sent to the farmer <span class="lang-tag">\u00b7 ' + UI.esc(UI.label(LANGUAGE_LABELS, replyLang)) + "</span></div>" + reply + "</div>" +
+        '<div class="card reveal">' + renderWhyBox(r.why) + "</div>" +
+        '</div><div class="col">' +
+        assessmentCard(r) + weatherCard(r.weather) + riskCard(r.risk) + expertCard(r.expert_review, r.status) +
+        '<div class="card reveal"><div class="card-title">Status timeline</div>' + renderStatusTimeline(r.events) + "</div>" +
+        "</div></div>";
+    }
+
+    async function load() {
+      UI.showLoading(root, "card", 2);
+      var res = await getReport(reportId);
+      if (!res.ok) { UI.showError(root, res.error, load); return; }
+      if (!res.data || typeof res.data !== "object") { UI.showEmpty(root, "No report data", "The server returned an empty report."); return; }
+      try { render(res.data); }
+      catch (e) { UI.showError(root, { code: "INTERNAL_ERROR", message: "This report could not be displayed." }, load); }
+    }
+
+    load();
+  </script>
+</body>
+</html>

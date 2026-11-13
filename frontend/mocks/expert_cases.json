@@ -1,0 +1,15 @@
+{
+  "ok": true,
+  "data": {
+    "count": 1,
+    "cases": [
+      {
+        "report_id": "rep_a1b2c3d4", "created_at": "2026-11-10T09:15:00Z", "farm_id": "farm_4a5b6c7d",
+        "crop": "tomato", "area_label": "Kolar North", "suspected_issue": "early_blight",
+        "confidence_band": "medium", "decision": "escalate_to_expert",
+        "escalation_reason": "MEDIUM_CONFIDENCE_HIGH_RISK",
+        "image_url": "/frontend/assets/img/leaf-macro.jpg", "rain_expected": true, "data_source": "live"
+      }
+    ]
+  }
+}

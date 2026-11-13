@@ -1,0 +1,756 @@
+{
+  "info": {
+    "name": "KhetLoop API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "expertKey",
+      "value": "demo-expert-key"
+    },
+    {
+      "key": "farmId",
+      "value": ""
+    },
+    {
+      "key": "reportId",
+      "value": ""
+    },
+    {
+      "key": "clusterId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "11 Health",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/health",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 List farms (saves farmId)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/farms",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "farms"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });",
+              "var farms = pm.response.json().data.farms; if (farms && farms.length) { pm.collectionVariables.set(\"farmId\", farms[0].id); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 Farm timeline",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/farms/{{farmId}}/timeline",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "farms",
+            "{{farmId}}",
+            "timeline"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4b Farm timeline (unknown farm, expect 404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/farms/farm_nope/timeline",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "farms",
+            "farm_nope",
+            "timeline"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 404\", function () { pm.response.to.have.status(404); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "1 Submit report (pick an image file in Body; saves reportId)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/reports",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reports"
+          ]
+        },
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "farm_id",
+              "value": "{{farmId}}",
+              "type": "text"
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "src": []
+            },
+            {
+              "key": "voice_text",
+              "value": "it is spreading fast",
+              "type": "text"
+            },
+            {
+              "key": "language",
+              "value": "en",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });",
+              "pm.collectionVariables.set(\"reportId\", pm.response.json().data.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "1b Submit report without image (expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/reports",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reports"
+          ]
+        },
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "farm_id",
+              "value": "{{farmId}}",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 400\", function () { pm.response.to.have.status(400); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 Get report",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/reports/{{reportId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reports",
+            "{{reportId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2b Get report (unknown, expect 404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/reports/rep_nope",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reports",
+            "rep_nope"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 404\", function () { pm.response.to.have.status(404); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 Expert cases",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Expert-Key",
+            "value": "{{expertKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/expert/cases?status=expert_review_pending",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "expert",
+            "cases"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "expert_review_pending"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "5b Expert cases without key (expect 401)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/expert/cases",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "expert",
+            "cases"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 401\", function () { pm.response.to.have.status(401); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6c Review with missing guidance (expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Expert-Key",
+            "value": "{{expertKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/expert/cases/{{reportId}}/review",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "expert",
+            "cases",
+            "{{reportId}}",
+            "review"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expert_name\": \"Demo Expert\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 400\", function () { pm.response.to.have.status(400); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6 Submit review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Expert-Key",
+            "value": "{{expertKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/expert/cases/{{reportId}}/review",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "expert",
+            "cases",
+            "{{reportId}}",
+            "review"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expert_name\": \"Demo Expert\",\n  \"guidance\": \"Remove affected leaves and keep foliage dry. Please share a photo in 2 days.\",\n  \"confirmed_issue\": \"early_blight\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "6b Submit review again (expect 409)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Expert-Key",
+            "value": "{{expertKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/expert/cases/{{reportId}}/review",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "expert",
+            "cases",
+            "{{reportId}}",
+            "review"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"expert_name\": \"Demo Expert\",\n  \"guidance\": \"Second review\",\n  \"confirmed_issue\": null\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 409\", function () { pm.response.to.have.status(409); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Simulate cluster (saves clusterId)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Expert-Key",
+            "value": "{{expertKey}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/demo/simulate-cluster",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "demo",
+            "simulate-cluster"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"crop\": \"tomato\",\n  \"suspected_issue\": \"early_blight\",\n  \"area_label\": \"Kolar North\",\n  \"target_farm_id\": \"{{farmId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });",
+              "pm.collectionVariables.set(\"clusterId\", pm.response.json().data.cluster.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "7 Radar clusters (public)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/radar/clusters",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "radar",
+            "clusters"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });",
+              "pm.test(\"has simulated flag\", function () { pm.expect(pm.response.json().data.has_simulated).to.eql(true); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "8 Cluster detail",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Expert-Key",
+            "value": "{{expertKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/radar/clusters/{{clusterId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "radar",
+            "clusters",
+            "{{clusterId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "9 Run reminders (needs P4 reminders.py)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "X-Expert-Key",
+            "value": "{{expertKey}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/reminders/run",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "reminders",
+            "run"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"status is 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"envelope has ok\", function () { pm.expect(pm.response.json()).to.have.property(\"ok\"); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

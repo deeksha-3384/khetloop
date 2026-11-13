@@ -350,13 +350,19 @@
       ]);
       var farmsRes = results[0], casesRes = results[1], clustersRes = results[2];
 
-      /* farm picker */
+           /* farm picker: simulated farms are hidden here */
+      var allFarms = (farmsRes.ok && Array.isArray(farmsRes.data.farms)) ? farmsRes.data.farms : [];
+      var shownFarms = allFarms.filter(function (f) { return f.data_source !== "simulated"; });
+      var hiddenCount = allFarms.length - shownFarms.length;
+
       if (!farmsRes.ok) {
         UI.showError(farmList, farmsRes.error, load);
       } else {
-        farms = Array.isArray(farmsRes.data.farms) ? farmsRes.data.farms : [];
+        farms = shownFarms;
         if (farms.length === 0) {
-          UI.showEmpty(farmList, "No farms yet", "Farms appear here after a farmer registers on Telegram.");
+          UI.showEmpty(farmList, "No live farms yet",
+            (hiddenCount ? hiddenCount + (hiddenCount === 1 ? " simulated demo farm is" : " simulated demo farms are") + " hidden. " : "") +
+            "Farms appear here after a farmer registers on Telegram.");
         } else {
           selectedId = farms[0].id;
           renderFarmList();
@@ -364,19 +370,18 @@
         }
       }
 
-      /* stats */
-      setStat("stFarms", farmsRes, function (d) { return Array.isArray(d.farms) ? d.farms.length : NaN; });
-      setStat("stReports", farmsRes, function (d) {
-        if (!Array.isArray(d.farms)) return NaN;
-        return d.farms.reduce(function (sum, f) { return sum + (Number(f.report_count) || 0); }, 0);
+      /* stats (farm and report counts match what the picker shows) */
+      setStat("stFarms", farmsRes, function () { return shownFarms.length; });
+      setStat("stReports", farmsRes, function () {
+        return shownFarms.reduce(function (sum, f) { return sum + (Number(f.report_count) || 0); }, 0);
       });
       setStat("stPending", casesRes, function (d) {
         return typeof d.count === "number" ? d.count : (Array.isArray(d.cases) ? d.cases.length : NaN);
       });
       setStat("stClusters", clustersRes, function (d) { return Array.isArray(d.clusters) ? d.clusters.length : NaN; });
-
       var foot = [];
       foot.push(USE_MOCK ? "Showing mock data." : "Showing live API data.");
+      if (hiddenCount) foot.push(hiddenCount + (hiddenCount === 1 ? " simulated farm is" : " simulated farms are") + " hidden from the picker.");
       if (!casesRes.ok) foot.push("Expert queue count unavailable: " + casesRes.error.message);
       if (clustersRes.ok && clustersRes.data.has_simulated) foot.push("Cluster count includes simulated demo data.");
       document.getElementById("heroFoot").textContent = foot.join(" ");

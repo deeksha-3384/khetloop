@@ -8,7 +8,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
+load_dotenv(BASE_DIR / ".env", override=True)
 
 
 def _get_int(name: str, default: int) -> int:
@@ -55,7 +55,7 @@ class Config:
     APP_PORT = _get_int("APP_PORT", 5000)
 
     # Integrations (P4)
-    SPEECH_PROVIDER = os.getenv("SPEECH_PROVIDER", "gemini_gtts")
+    SPEECH_PROVIDER = os.getenv("SPEECH_PROVIDER", "groq_gtts")
     TMP_DIR = _get_tmp_dir()
 
     @classmethod

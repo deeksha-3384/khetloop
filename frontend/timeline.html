@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Farm Timeline | KhetLoop</title>
+  <link rel="icon" type="image/png" href="assets/img/logo-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="js/config.js"></script>
+  <script src="js/constants.js"></script>
+  <script src="js/ui.js"></script>
+
+  <style>
+    .back { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; font-weight: 500; transition: color .25s, transform .25s var(--ease); }
+    .back:hover { color: var(--lime); transform: translateX(-4px); }
+
+    .farm-hero { position: relative; overflow: hidden; isolation: isolate; border-radius: var(--radius-lg); padding: 40px; margin: 18px 0 34px; border: 1px solid var(--border-strong); display: grid; gap: 22px; }
+    .farm-hero-bg { position: absolute; inset: 0; z-index: -2; background: url("assets/img/farm-hands.jpg") center / cover no-repeat, linear-gradient(135deg, #14301f, #08110c); }
+    .farm-hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(8, 17, 12, .95) 0%, rgba(8, 17, 12, .82) 55%, rgba(8, 17, 12, .6) 100%); }
+    .farm-hero h1 { font-size: clamp(38px, 5vw, 60px); }
+    .farm-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .fact span { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+    .fact b { font-family: var(--font-display); font-size: 30px; font-weight: 600; line-height: 1.2; }
+    .fact small { display: block; color: var(--muted); font-size: 12.5px; }
+
+    .tl-wrap { position: relative; display: grid; gap: 22px; padding-left: 34px; }
+    .tl-wrap::before { content: ""; position: absolute; left: 11px; top: 8px; bottom: 8px; width: 2px; background: linear-gradient(var(--lime), rgba(163, 214, 92, .12)); border-radius: 2px; }
+    .day { display: grid; gap: 16px; }
+    .day-head { position: relative; display: flex; align-items: center; gap: 12px; font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--lime); }
+    .day-head::before { content: ""; position: absolute; left: -31px; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: var(--bg); border: 2px solid var(--lime); box-shadow: 0 0 0 4px rgba(163, 214, 92, .12); }
+    .day-head small { color: var(--muted); font-weight: 500; letter-spacing: .04em; text-transform: none; }
+
+    .entry { position: relative; display: grid; grid-template-columns: 240px minmax(0, 1fr); padding: 0; color: inherit; text-decoration: none; }
+    .entry::after { content: ""; position: absolute; left: -23px; top: 34px; width: 22px; height: 2px; background: rgba(163, 214, 92, .35); }
+    .entry-media { position: relative; min-height: 190px; overflow: hidden; background: var(--surface-2); }
+    .entry-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .9s var(--ease); }
+    .entry:hover .entry-media img { transform: scale(1.07); }
+    .entry-media .img-fallback { min-height: 100%; }
+    .entry-body { padding: 22px 26px; display: grid; gap: 10px; align-content: start; }
+    .entry-top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .entry-title { font-size: 32px; }
+    .entry-time { font-size: 13px; color: var(--muted); }
+    .entry-sub { color: var(--muted); font-size: 14px; }
+    .guidance-box { padding: 12px 14px; border-left: 2px solid #6fe0a6; border-radius: 0 12px 12px 0; background: rgba(111, 224, 166, .07); font-size: 14.5px; line-height: 1.65; }
+    .guidance-box span { display: block; margin-bottom: 4px; font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #9af0c4; }
+    .entry-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 13px; color: var(--lime); font-weight: 600; }
+    .entry-foot span:last-child { transition: transform .25s var(--ease); }
+    .entry:hover .entry-foot span:last-child { transform: translateX(6px); }
+
+    @media (max-width: 900px) { .farm-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 680px) {
+      .farm-hero { padding: 26px 22px; }
+      .tl-wrap { padding-left: 24px; }
+      .tl-wrap::before { left: 5px; }
+      .day-head::before { left: -25px; }
+      .entry { grid-template-columns: 1fr; }
+      .entry::after { display: none; }
+      .entry-media { min-height: 0; aspect-ratio: 16 / 9; }
+      .entry-body { padding: 18px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="container">
+      <a class="back" href="index.html">&larr; All farms</a>
+      <div id="root"></div>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/components/dataSourceBadge.js"></script>
+  <script src="js/components/statusTimeline.js"></script>
+  <script src="js/components/whyBox.js"></script>
+  <script src="js/components/reportCard.js"></script>
+  <script>
+    UI.mountNavbar("");
+    UI.mountFooter();
+
+    var root = document.getElementById("root");
+    var farmId = UI.getParam("farm_id");
+
+    function istDayKey(iso) {
+      var d = UI.formatDate(iso);
+      return d;
+    }
+
+    function daysSince(dateStr) {
+      if (!dateStr) return null;
+      var d = new Date(dateStr);
+      if (isNaN(d.getTime())) return null;
+      var n = Math.floor((Date.now() - d.getTime()) / 86400000);
+      return n < 0 ? null : n;
+    }
+
+    function summaryChips(items) {
+      var counts = {};
+      items.forEach(function (it) { counts[it.status] = (counts[it.status] || 0) + 1; });
+      return REPORT_STATUSES.filter(function (s) { return counts[s]; }).map(function (s) {
+        return '<span class="pill pill-' + UI.esc(s) + '">' + counts[s] + " \u00b7 " + UI.esc(UI.label(STATUS_LABELS, s)) + "</span>";
+      }).join("");
+    }
+
+    function entryHtml(it, crop) {
+      var levels = { high: 3, medium: 2, low: 1 };
+      var lvl = levels[it.confidence_band] || 0;
+      var bars = "";
+      for (var i = 1; i <= 3; i++) bars += '<i class="' + (i <= lvl ? "on" : "") + '"></i>';
+      return '<a class="card card-hover spot entry reveal" href="report.html?id=' + encodeURIComponent(it.report_id) + '">' +
+        '<div class="entry-media">' + UI.img(it.image_url, "Leaf photo") + "</div>" +
+        '<div class="entry-body">' +
+        '<div class="entry-top"><span class="pill pill-' + UI.esc(it.status) + '">' + UI.esc(UI.label(STATUS_LABELS, it.status)) + "</span>" +
+        '<span class="entry-time">' + UI.esc(UI.formatDateTime(it.created_at)) + "</span></div>" +
+        '<h3 class="entry-title">' + UI.esc(UI.label(ISSUE_LABELS, it.suspected_issue)) + "</h3>" +
+        '<div class="entry-sub">' + UI.esc(UI.label(CROP_LABELS, crop)) + " \u00b7 " + UI.esc(UI.label(DECISION_LABELS, it.decision)) + "</div>" +
+        (lvl ? '<div class="conf conf-' + UI.esc(it.confidence_band) + '" title="Model self-reported, not calibrated"><span class="conf-bars">' + bars + "</span>" + UI.esc(UI.label(CONFIDENCE_LABELS, it.confidence_band)) + "</div>" : "") +
+        (it.expert_guidance ? '<div class="guidance-box"><span>Expert guidance</span>' + UI.esc(it.expert_guidance) + "</div>" : "") +
+        '<div class="entry-foot"><span>View full report</span><span>&rarr;</span></div>' +
+        "</div></a>";
+    }
+
+    function render(data) {
+      var farm = data.farm || {};
+      var items = Array.isArray(data.items) ? data.items.slice() : [];
+      items.sort(function (a, b) {
+        var ta = Date.parse(a.created_at), tb = Date.parse(b.created_at);
+        if (isNaN(ta) || isNaN(tb)) return 0;
+        return tb - ta; /* newest first */
+      });
+
+      var sown = daysSince(farm.sowing_date);
+      document.title = UI.label(CROP_LABELS, farm.crop) + " farm timeline | KhetLoop";
+
+      var html =
+        '<div class="farm-hero reveal"><div class="farm-hero-bg"></div>' +
+        "<div class='stack' style='gap:12px'><span class='eyebrow'>Farm memory</span>" +
+        "<h1>" + UI.esc(UI.label(CROP_LABELS, farm.crop)) + " farm</h1>" +
+        '<p class="muted">' + UI.esc(farm.area_label || "Area not set") + "</p></div>" +
+        '<div class="farm-facts">' +
+        '<div class="fact"><span>Crop</span><b>' + UI.esc(UI.label(CROP_LABELS, farm.crop)) + "</b></div>" +
+        '<div class="fact"><span>Area</span><b>' + UI.esc(farm.area_label || "\u2014") + "</b></div>" +
+        '<div class="fact"><span>Sowing date</span><b>' + UI.esc(farm.sowing_date ? UI.formatDate(farm.sowing_date) : "Not recorded") + "</b>" +
+        (sown !== null ? "<small>" + sown + (sown === 1 ? " day" : " days") + " since sowing</small>" : "") + "</div>" +
+        '<div class="fact"><span>Reports</span><b>' + items.length + "</b></div></div>" +
+        (items.length ? '<div class="row" style="gap:8px">' + summaryChips(items) + "</div>" : "") +
+        "</div>";
+
+      if (items.length === 0) {
+        html += '<div class="empty"><strong>No reports yet</strong><p>When the farmer sends a leaf photo on Telegram, it will appear here.</p></div>';
+        root.innerHTML = html;
+        return;
+      }
+
+      html += '<div class="tl-wrap">';
+      var lastDay = null;
+      items.forEach(function (it) {
+        var day = istDayKey(it.created_at);
+        if (day !== lastDay) {
+          if (lastDay !== null) html += "</div>";
+          html += '<div class="day"><div class="day-head">' + UI.esc(day) + "</div>";
+          lastDay = day;
+        }
+        html += entryHtml(it, farm.crop);
+      });
+      html += "</div></div>";
+      root.innerHTML = html;
+    }
+
+    async function load() {
+      if (!farmId) {
+        UI.showError(root, { code: "INVALID_REQUEST", message: "Farm id is missing. Choose a farm on the home page." });
+        return;
+      }
+      UI.showLoading(root, "card", 2);
+      var res = await getFarmTimeline(farmId);
+      if (!res.ok) { UI.showError(root, res.error, load); return; }
+      if (!res.data || typeof res.data !== "object") { UI.showEmpty(root, "No data", "The server returned an empty timeline."); return; }
+      try { render(res.data); }
+      catch (e) { UI.showError(root, { code: "INTERNAL_ERROR", message: "This timeline could not be displayed." }, load); }
+    }
+
+    load();
+  </script>
+</body>
+</html>

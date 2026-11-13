@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Community Radar | KhetLoop</title>
+  <link rel="icon" type="image/png" href="assets/img/logo-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500&family=Noto+Sans+Kannada:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/constants.js"></script>
+  <script src="js/ui.js"></script>
+
+  <style>
+    .stats3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 22px; }
+    .stat-card { padding: 18px 22px; display: grid; gap: 2px; }
+    .stat-card b { font-family: var(--font-display); font-size: 44px; font-weight: 600; line-height: 1; color: var(--lime); }
+    .stat-card span { font-size: 13px; color: var(--muted); }
+
+    .radar { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+    .map-box { position: relative; z-index: 0; isolation: isolate; height: 640px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-strong); box-shadow: var(--shadow); background: #0a1410; }
+    #map { position: absolute; inset: 0; }
+    .map-msg { position: absolute; inset: 0; z-index: 5; display: grid; place-items: center; padding: 30px; text-align: center; color: var(--muted); background: rgba(8, 17, 12, .85); }
+    .map-note { position: absolute; z-index: 800; left: 14px; right: 14px; bottom: 34px; padding: 10px 14px; border-radius: 12px; font-size: 13px; color: var(--warn); background: rgba(8, 17, 12, .92); border: 1px solid rgba(224, 184, 76, .4); }
+    .map-legend { position: absolute; z-index: 800; left: 14px; top: 14px; display: flex; gap: 14px; padding: 8px 14px; border-radius: 999px; font-size: 12px; color: var(--muted); background: rgba(8, 17, 12, .85); border: 1px solid var(--border); }
+    .map-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+
+    .side { display: grid; gap: 22px; min-width: 0; }
+    .c-list { display: grid; gap: 10px; max-height: 330px; overflow-y: auto; padding-right: 4px; }
+    .c-item { display: grid; gap: 6px; padding: 14px; text-align: left; border-radius: 14px; border: 1px solid var(--border); background: rgba(255, 255, 255, .03); color: var(--text); font: inherit; cursor: pointer; transition: border-color .25s, background .25s, transform .25s var(--ease); }
+    .c-item:hover { border-color: var(--border-strong); background: rgba(163, 214, 92, .06); transform: translateX(3px); }
+    .c-item.on { border-color: var(--lime); background: rgba(163, 214, 92, .1); box-shadow: inset 0 0 0 1px var(--lime); }
+    .c-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .c-item strong { font-family: var(--font-display); font-size: 24px; font-weight: 600; line-height: 1.1; }
+    .c-item small { color: var(--muted); font-size: 13px; }
+    .sev { display: inline-block; padding: 3px 11px; border-radius: 999px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border: 1px solid; }
+    .sev-watch { color: var(--warn); border-color: rgba(224, 184, 76, .45); background: rgba(224, 184, 76, .08); }
+    .sev-elevated { color: var(--danger); border-color: rgba(255, 123, 123, .5); background: rgba(255, 123, 123, .08); }
+
+    .kv2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+    .kv2 span { display: block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); margin-bottom: 2px; }
+    .kv2 b { font-weight: 600; }
+    .d-title { font-size: 34px; }
+    .quote { padding: 12px 14px; border-left: 2px solid var(--violet); border-radius: 0 12px 12px 0; background: rgba(197, 139, 255, .06); font-size: 14px; line-height: 1.65; }
+    .small { font-size: 12.5px; color: var(--faint); }
+    .r-list { display: grid; gap: 10px; }
+    .r-item { display: flex; gap: 12px; align-items: center; padding: 8px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255, 255, 255, .025); }
+    .r-thumb { flex: none; width: 64px; height: 64px; border-radius: 10px; overflow: hidden; background: var(--surface-2); }
+    .r-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .r-thumb .img-fallback { min-height: 0; font-size: 10px; text-align: center; }
+    .r-item div:last-child { display: grid; gap: 2px; min-width: 0; }
+    .r-item small { color: var(--muted); font-size: 12.5px; }
+    .privacy { padding: 14px 18px; border-radius: 14px; border: 1px solid var(--border); background: rgba(255, 255, 255, .02); font-size: 13px; color: var(--muted); }
+
+    /* markers */
+    .cm-wrap { background: none; border: 0; }
+    .cm { position: relative; width: 100%; height: 100%; border-radius: 50%; display: grid; place-items: center; font: 700 15px var(--font-ui); color: #0a1a0f; border: 2px solid rgba(255, 255, 255, .85); box-shadow: 0 6px 18px rgba(0, 0, 0, .6); transition: transform .25s var(--ease), box-shadow .25s; }
+    .cm::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--c); opacity: 0; animation: cmPulse 2.2s infinite; }
+    .cm-watch { background: var(--warn); --c: var(--warn); }
+    .cm-elevated { background: #ff7b7b; --c: #ff7b7b; }
+    .cm:hover { transform: scale(1.14); }
+    .cm.sel { box-shadow: 0 0 0 5px rgba(163, 214, 92, .55), 0 6px 18px rgba(0, 0, 0, .6); transform: scale(1.12); }
+    @keyframes cmPulse { 0% { transform: scale(.9); opacity: .8; } 100% { transform: scale(1.7); opacity: 0; } }
+
+    /* leaflet dark theme */
+    .leaflet-container { background: #0a1410; font-family: var(--font-ui); }
+    .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.82) contrast(.92) saturate(.55); }
+    .leaflet-container .leaflet-marker-pane, .leaflet-container .leaflet-popup-pane { filter: none; }
+    .leaflet-popup-content-wrapper { background: rgba(12, 24, 17, .97); color: var(--text); border: 1px solid var(--border-strong); border-radius: 16px; box-shadow: 0 24px 50px -16px rgba(0, 0, 0, .9); }
+    .leaflet-popup-tip { background: rgba(12, 24, 17, .97); border: 1px solid var(--border-strong); }
+    .leaflet-popup-content { margin: 16px 18px; min-width: 210px; line-height: 1.5; }
+    .leaflet-container a.leaflet-popup-close-button { color: var(--muted); }
+    .pop { display: grid; gap: 8px; }
+    .pop strong { font-family: var(--font-display); font-size: 24px; font-weight: 600; line-height: 1.1; }
+    .pop small { color: var(--muted); font-size: 12.5px; }
+    .leaflet-bar { border: 1px solid var(--border-strong) !important; box-shadow: none !important; border-radius: 12px !important; overflow: hidden; }
+    .leaflet-bar a { background: #0f1b14; color: var(--text); border-bottom: 1px solid var(--border); }
+    .leaflet-bar a:hover { background: #1a2d22; color: var(--lime); }
+    .leaflet-control-attribution { background: rgba(8, 17, 12, .75) !important; color: var(--faint) !important; }
+    .leaflet-control-attribution a { color: var(--muted) !important; }
+
+    @media (max-width: 1000px) { .radar { grid-template-columns: 1fr; } .map-box { height: 460px; } }
+    @media (max-width: 680px) { .stats3 { grid-template-columns: 1fr; } .stat-card b { font-size: 36px; } .map-legend { display: none; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="container">
+      <div class="page-head">
+        <span class="eyebrow">Community radar</span>
+        <h1>Early signals, kept private</h1>
+        <p class="muted" style="max-width:660px">Similar nearby reports can form a potential cluster. The map shows only coarse area centres, never individual farms or exact locations.</p>
+      </div>
+
+      <div id="simBanner" class="banner-sim" style="margin-bottom:22px" hidden>SIMULATED DATA <span>This map includes demo clusters. They do not come from real farms.</span></div>
+
+
+            <div id="demoPanel" class="card" style="margin-bottom:22px" hidden>
+        <div class="row between">
+          <div class="card-title" style="margin:0">Demo controls</div>
+          <span class="badge badge-simulated"><i class="badge-dot"></i>Simulated</span>
+        </div>
+        <p class="small" style="margin-top:6px">Creates 3 simulated reports from 3 simulated farms, runs the real cluster check, and sends the alert to the chosen farm&rsquo;s Telegram chat.</p>
+        <div class="grid grid-3" style="margin-top:14px">
+          <div class="field"><label for="demoFarm">Farm that receives the alert</label><select class="select" id="demoFarm"></select></div>
+          <div class="field"><label for="demoIssue">Suspected issue</label><select class="select" id="demoIssue"></select></div>
+          <div class="field"><label for="demoArea">Area label</label><input class="input" id="demoArea" value="Kolar North" maxlength="60" autocomplete="off" /></div>
+        </div>
+        <div class="row" style="margin-top:16px">
+          <button type="button" class="btn btn-primary" id="demoCreate">Create demo cluster <span class="arrow">&rarr;</span></button>
+          <button type="button" class="btn btn-ghost" id="demoRemind">Send due reminders</button>
+          <span class="small" id="demoMsg" role="status"></span>
+        </div>
+      </div>
+      <div class="stats3">
+        <div class="card stat-card"><b id="sClusters">&mdash;</b><span>Potential clusters</span></div>
+        <div class="card stat-card"><b id="sElevated">&mdash;</b><span>At elevated severity</span></div>
+        <div class="card stat-card"><b id="sReports">&mdash;</b><span>Reports grouped into clusters</span></div>
+      </div>
+
+      <div class="radar">
+        <div class="map-box">
+          <div id="map"></div>
+          <div class="map-legend"><span><i style="background:var(--warn)"></i>Watch</span><span><i style="background:#ff7b7b"></i>Elevated</span></div>
+          <div id="mapNote" class="map-note" hidden>Map tiles could not load. Check your internet connection. Clusters are still listed on the right.</div>
+        </div>
+
+        <div class="side">
+          <div class="card">
+            <div class="row between" style="margin-bottom:14px">
+              <div class="card-title" style="margin:0">Clusters</div>
+              <button type="button" class="btn btn-ghost btn-sm" id="refreshBtn">Refresh</button>
+            </div>
+            <div id="cList" class="c-list"></div>
+            <p class="small" id="updated" style="margin-top:12px"></p>
+          </div>
+          <div id="detail"></div>
+          <div class="privacy">Privacy: coordinates are rounded to about 1 km. Farm ids, report ids and farmer details are never shown on the public map.</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/api.js"></script>
+  <script src="js/components/dataSourceBadge.js"></script>
+  <script>
+    UI.mountNavbar("radar");
+    UI.mountFooter();
+
+    var SEV_LABELS = { watch: "Watch", elevated: "Elevated" };
+    var cList = document.getElementById("cList");
+    var detailEl = document.getElementById("detail");
+    var mapNote = document.getElementById("mapNote");
+    var map = null, markers = {}, clusters = [], selectedId = null, detailToken = 0;
+
+    function validPoint(c) { return typeof c.centroid_lat === "number" && typeof c.centroid_lng === "number" && isFinite(c.centroid_lat) && isFinite(c.centroid_lng); }
+    function sevLabel(s) { return UI.label(SEV_LABELS, s); }
+
+    /* ---------------- map ---------------- */
+    function initMap() {
+      var box = document.getElementById("map");
+      if (typeof L === "undefined") {
+        box.insertAdjacentHTML("afterend", '<div class="map-msg"><div><strong style="font-family:var(--font-display);font-size:26px;color:var(--text)">Map unavailable</strong><p style="margin-top:6px">The map library could not load. Check your internet connection. Clusters are still listed on the right.</p></div></div>');
+        return;
+      }
+      map = L.map("map", { scrollWheelZoom: false, zoomControl: false }).setView([13.2, 77.9], 8);
+      L.control.zoom({ position: "topright" }).addTo(map);
+      var tiles = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: "&copy; OpenStreetMap contributors"
+      }).addTo(map);
+      var errs = 0;
+      tiles.on("tileerror", function () { errs++; if (errs >= 4) mapNote.hidden = false; });
+      tiles.on("tileload", function () { errs = 0; mapNote.hidden = true; });
+      map.on("click", function () { map.scrollWheelZoom.enable(); });
+      map.on("mouseout", function () { map.scrollWheelZoom.disable(); });
+      window.addEventListener("resize", function () { map.invalidateSize(); });
+      setTimeout(function () { map.invalidateSize(); }, 300);
+    }
+
+    function clearMarkers() {
+      Object.keys(markers).forEach(function (id) { map.removeLayer(markers[id]); });
+      markers = {};
+    }
+
+    function popupNode(c) {
+      var d = document.createElement("div");
+      d.className = "pop";
+      d.innerHTML =
+        '<div class="row" style="gap:8px"><span class="sev sev-' + UI.esc(c.severity) + '">' + UI.esc(sevLabel(c.severity)) + "</span>" + dataSourceBadge(c.data_source) + "</div>" +
+        "<strong>" + UI.esc(UI.label(ISSUE_LABELS, c.suspected_issue)) + "</strong>" +
+        "<small>" + UI.esc(UI.label(CROP_LABELS, c.crop)) + " \u00b7 " + UI.esc(c.area_label || "Area not set") + "</small>" +
+        "<small>" + UI.esc(c.report_count) + " similar reports in the last " + UI.esc(c.window_hours) + " h</small>" +
+        '<button type="button" class="btn btn-primary btn-sm">View details</button>';
+      d.querySelector("button").addEventListener("click", function () { select(c.id, false); });
+      return d;
+    }
+
+    function drawMarkers() {
+      if (!map) return;
+      clearMarkers();
+      var pts = [];
+      clusters.forEach(function (c) {
+        if (!validPoint(c)) return;
+        var n = Number(c.report_count) || 0;
+        var size = Math.max(38, Math.min(70, 30 + n * 5));
+        var icon = L.divIcon({
+          className: "cm-wrap",
+          html: '<div class="cm cm-' + (c.severity === "elevated" ? "elevated" : "watch") + (c.id === selectedId ? " sel" : "") + '">' + n + "</div>",
+          iconSize: [size, size], iconAnchor: [size / 2, size / 2], popupAnchor: [0, -size / 2]
+        });
+        var m = L.marker([c.centroid_lat, c.centroid_lng], { icon: icon, title: UI.label(ISSUE_LABELS, c.suspected_issue) + " cluster" });
+        m.bindPopup(popupNode(c), { closeButton: true });
+        m.on("click", function () { markSelected(c.id); });
+        m.addTo(map);
+        markers[c.id] = m;
+        pts.push([c.centroid_lat, c.centroid_lng]);
+      });
+      if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.35), { maxZoom: 10 });
+    }
+
+    function markSelected(id) {
+      selectedId = id;
+      Object.keys(markers).forEach(function (k) {
+        var el = markers[k].getElement();
+        var inner = el && el.firstChild;
+        if (inner) inner.classList.toggle("sel", k === id);
+      });
+      renderList();
+    }
+
+    /* ---------------- list ---------------- */
+    function renderList() {
+      cList.removeAttribute("aria-busy");
+      if (clusters.length === 0) {
+        UI.showEmpty(cList, "No potential clusters", "No groups of similar reports have been detected in the last " + RADAR_TIME_WINDOW_HOURS + " hours.");
+        return;
+      }
+      cList.innerHTML = clusters.map(function (c) {
+        return '<button type="button" class="c-item' + (c.id === selectedId ? " on" : "") + '" data-id="' + UI.esc(c.id) + '">' +
+          '<div class="c-top"><span class="sev sev-' + UI.esc(c.severity) + '">' + UI.esc(sevLabel(c.severity)) + "</span>" + dataSourceBadge(c.data_source) + "</div>" +
+          "<strong>" + UI.esc(UI.label(ISSUE_LABELS, c.suspected_issue)) + "</strong>" +
+          "<small>" + UI.esc(UI.label(CROP_LABELS, c.crop)) + " \u00b7 " + UI.esc(c.area_label || "Area not set") + " \u00b7 " + UI.esc(c.report_count) + " reports" + (validPoint(c) ? "" : " \u00b7 location unavailable") + "</small></button>";
+      }).join("");
+    }
+
+    cList.addEventListener("click", function (e) {
+      var b = e.target.closest ? e.target.closest(".c-item") : null;
+      if (b) select(b.getAttribute("data-id"), true);
+    });
+
+    /* ---------------- detail (needs expert key) ---------------- */
+    function select(id, fly) {
+      markSelected(id);
+      var m = markers[id];
+      if (map && m && fly) {
+        map.flyTo(m.getLatLng(), Math.max(map.getZoom(), 10), { duration: 0.8 });
+        setTimeout(function () { if (markers[id]) markers[id].openPopup(); }, 850);
+      }
+      loadDetail(id);
+      if (window.innerWidth <= 1000) detailEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function detailHtml(d) {
+      var c = d.cluster || {};
+      var reps = Array.isArray(d.reports) ? d.reports : [];
+      var alerts = Array.isArray(d.alerts) ? d.alerts : [];
+      var delivered = alerts.filter(function (a) { return a.delivered === true; }).length;
+      var alertPart = alerts.length
+        ? '<div class="kv2"><div><span>Alerts sent</span><b>' + alerts.length + "</b></div><div><span>Delivered</span><b>" + delivered + "</b></div></div>" +
+          '<div class="quote" style="margin-top:12px">' + UI.esc(alerts[0].message) + "</div>" +
+          '<p class="small" style="margin-top:8px">Sent to nearby farms growing the same crop. Individual farms are not shown. ' + dataSourceBadge(alerts[0].data_source) + "</p>"
+        : '<div class="empty empty-sm">No alerts have been recorded for this cluster.</div>';
+      var repPart = reps.length
+        ? '<div class="r-list">' + reps.map(function (r) {
+            return '<div class="r-item"><div class="r-thumb">' + UI.img(r.image_url, "Leaf photo") + "</div><div>" +
+              "<b>" + UI.esc(UI.label(ISSUE_LABELS, r.suspected_issue)) + "</b>" +
+              "<small>" + UI.esc(UI.label(CONFIDENCE_LABELS, r.confidence_band)) + " \u00b7 " + UI.esc(r.area_label || "") + "</small>" +
+              "<small>" + UI.esc(UI.formatDateTime(r.created_at)) + "</small></div></div>";
+          }).join("") + "</div>"
+        : '<div class="empty empty-sm">No report details were returned.</div>';
+      return '<div class="card reveal">' +
+        '<div class="row between" style="margin-bottom:12px"><div class="row" style="gap:8px"><span class="sev sev-' + UI.esc(c.severity) + '">' + UI.esc(sevLabel(c.severity)) + "</span>" +
+        '<span class="chip">Potential cluster</span></div>' + dataSourceBadge(c.data_source, { large: c.data_source === "simulated" }) + "</div>" +
+        '<h3 class="d-title">' + UI.esc(UI.label(ISSUE_LABELS, c.suspected_issue)) + "</h3>" +
+        '<p class="muted" style="margin:4px 0 16px">' + UI.esc(UI.label(CROP_LABELS, c.crop)) + " \u00b7 " + UI.esc(c.area_label || "Area not set") + "</p>" +
+        '<div class="kv2"><div><span>Reports</span><b>' + UI.esc(c.report_count) + "</b></div><div><span>Time window</span><b>" + UI.esc(c.window_hours) + " hours</b></div>" +
+        '<div style="grid-column:1/-1"><span>Detected</span><b>' + UI.esc(UI.formatDateTime(c.created_at)) + "</b></div></div>" +
+        '<hr class="divider"><div class="card-title">Grouped reports</div>' + repPart +
+        '<hr class="divider"><div class="card-title">Community alert</div>' + alertPart +
+        '<p class="small" style="margin-top:14px">A potential cluster is a cautious signal, not a confirmed diagnosis. Please inspect plants and confirm with an agriculture officer.</p></div>';
+    }
+
+    async function loadDetail(id) {
+      var token = ++detailToken;
+      UI.showLoading(detailEl, "card", 1);
+      var res = await getClusterDetail(id);
+      if (token !== detailToken) return;
+      if (!res.ok) { UI.showError(detailEl, res.error, function () { loadDetail(id); }); return; }
+      try { detailEl.innerHTML = detailHtml(res.data); }
+      catch (e) { UI.showError(detailEl, { code: "INTERNAL_ERROR", message: "This cluster could not be displayed." }, function () { loadDetail(id); }); }
+    }
+
+    /* ---------------- load ---------------- */
+    function setStats(list) {
+      var el = function (id) { return document.getElementById(id); };
+      if (!list) { ["sClusters", "sElevated", "sReports"].forEach(function (i) { el(i).textContent = "\u2014"; }); return; }
+      UI.animateNumber(el("sClusters"), list.length);
+      UI.animateNumber(el("sElevated"), list.filter(function (c) { return c.severity === "elevated"; }).length);
+      UI.animateNumber(el("sReports"), list.reduce(function (s, c) { return s + (Number(c.report_count) || 0); }, 0));
+    }
+
+    async function load() {
+      UI.showLoading(cList, "lines", 4);
+      document.getElementById("updated").textContent = "";
+      var res = await getClusters();
+      if (!res.ok) {
+        clusters = [];
+        setStats(null);
+        document.getElementById("simBanner").hidden = true;
+        if (map) clearMarkers();
+        UI.showError(cList, res.error, load);
+        return;
+      }
+      clusters = Array.isArray(res.data.clusters) ? res.data.clusters : [];
+      var anySim = res.data.has_simulated === true || clusters.some(function (c) { return c.data_source === "simulated"; });
+      document.getElementById("simBanner").hidden = !anySim;
+      if (selectedId && !clusters.some(function (c) { return c.id === selectedId; })) { selectedId = null; detailEl.innerHTML = ""; }
+      setStats(clusters);
+      renderList();
+      drawMarkers();
+      document.getElementById("updated").textContent = res.data.generated_at ? "Updated " + UI.formatDateTime(res.data.generated_at) : "";
+      if (!selectedId && clusters.length) {
+        detailEl.innerHTML = '<div class="card"><div class="empty empty-sm">Select a cluster to see its grouped reports and alert.</div></div>';
+      }
+    }
+
+        /* ---------- demo controls (only with ?demo=1) ---------- */
+    (function () {
+      if (UI.getParam("demo") !== "1") return;
+      var panel = document.getElementById("demoPanel");
+      var farmSel = document.getElementById("demoFarm");
+      var issueSel = document.getElementById("demoIssue");
+      var areaIn = document.getElementById("demoArea");
+      var createBtn = document.getElementById("demoCreate");
+      var remindBtn = document.getElementById("demoRemind");
+      var msg = document.getElementById("demoMsg");
+      var demoFarms = [];
+      panel.hidden = false;
+
+      issueSel.innerHTML = ISSUES.filter(function (i) { return i !== "healthy" && i !== "unknown"; }).map(function (i) {
+        return '<option value="' + UI.esc(i) + '"' + (i === "early_blight" ? " selected" : "") + ">" + UI.esc(UI.label(ISSUE_LABELS, i)) + "</option>";
+      }).join("");
+
+      listFarms().then(function (r) {
+        if (!r.ok) { msg.textContent = "Could not load farms: " + r.error.message; createBtn.disabled = true; return; }
+        demoFarms = Array.isArray(r.data.farms) ? r.data.farms : [];
+        if (!demoFarms.length) { msg.textContent = "No farms available to receive an alert."; createBtn.disabled = true; return; }
+        farmSel.innerHTML = demoFarms.map(function (f) {
+          return '<option value="' + UI.esc(f.id) + '">' + UI.esc((f.farmer_name || "Unnamed farmer") + " \u00b7 " + UI.label(CROP_LABELS, f.crop) + " \u00b7 " + (f.area_label || "Area not set")) + "</option>";
+        }).join("");
+        var first = demoFarms[0];
+        if (first.area_label) areaIn.value = first.area_label;
+        farmSel.dispatchEvent(new Event("change"));
+      });
+      issueSel.dispatchEvent(new Event("change"));
+
+      farmSel.addEventListener("change", function () {
+        for (var i = 0; i < demoFarms.length; i++) {
+          if (demoFarms[i].id === farmSel.value && demoFarms[i].area_label) areaIn.value = demoFarms[i].area_label;
+        }
+      });
+
+      createBtn.addEventListener("click", async function () {
+        var farm = null;
+        for (var i = 0; i < demoFarms.length; i++) if (demoFarms[i].id === farmSel.value) farm = demoFarms[i];
+        var area = areaIn.value.trim();
+        if (!farm || !area) { msg.textContent = "Choose a farm and enter an area label."; return; }
+        createBtn.disabled = true; msg.textContent = "Creating demo cluster\u2026";
+        var res = await simulateCluster({
+          crop: farm.crop, suspected_issue: issueSel.value, area_label: area, target_farm_id: farm.id
+        });
+        createBtn.disabled = false;
+        if (!res.ok) { msg.textContent = ""; UI.toast(res.error.message, "error"); return; }
+        var sent = res.data.alerts_sent;
+        msg.textContent = "Created. Alerts sent: " + sent + ".";
+        UI.toast("Demo cluster created. Alerts sent: " + sent, "success");
+        await load();
+        if (res.data.cluster && clusters.some(function (c) { return c.id === res.data.cluster.id; })) select(res.data.cluster.id, true);
+      });
+
+      remindBtn.addEventListener("click", async function () {
+        remindBtn.disabled = true; msg.textContent = "Sending reminders\u2026";
+        var res = await runReminders();
+        remindBtn.disabled = false;
+        if (!res.ok) { msg.textContent = ""; UI.toast(res.error.message, "error"); return; }
+        msg.textContent = "Reminders sent: " + res.data.sent + ", failed: " + res.data.failed + ".";
+        UI.toast("Reminders sent: " + res.data.sent + ", failed: " + res.data.failed, "success");
+      });
+    })();
+    document.getElementById("refreshBtn").addEventListener("click", load);
+    initMap();
+    load();
+  </script>
+</body>
+</html>

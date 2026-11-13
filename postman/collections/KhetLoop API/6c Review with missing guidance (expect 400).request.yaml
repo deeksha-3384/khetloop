@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/expert/cases/rep_d4e5f6a7/review"
+method: POST
+headers:
+  Accept: application/json
+  X-Expert-Key: "{{expertKey}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "expert_name": "Demo Expert"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("status is 400", function () { pm.response.to.have.status(400); });
+      pm.test("envelope has ok", function () { pm.expect(pm.response.json()).to.have.property("ok"); });
+    language: text/javascript
+order: 13000

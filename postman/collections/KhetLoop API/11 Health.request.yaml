@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/health"
+method: GET
+headers:
+  Accept: application/json
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("status is 200", function () { pm.response.to.have.status(200); });
+      pm.test("envelope has ok", function () { pm.expect(pm.response.json()).to.have.property("ok"); });
+    language: text/javascript
+order: 1000

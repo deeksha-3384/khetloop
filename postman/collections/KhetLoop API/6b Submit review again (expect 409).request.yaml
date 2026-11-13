@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/expert/cases/{{reportId}}/review"
+method: POST
+headers:
+  Accept: application/json
+  X-Expert-Key: "{{expertKey}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "expert_name": "Demo Expert",
+      "guidance": "Second review",
+      "confirmed_issue": null
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("status is 409", function () { pm.response.to.have.status(409); });
+      pm.test("envelope has ok", function () { pm.expect(pm.response.json()).to.have.property("ok"); });
+    language: text/javascript
+order: 12000

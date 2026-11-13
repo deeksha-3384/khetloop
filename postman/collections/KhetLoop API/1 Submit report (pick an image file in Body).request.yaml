@@ -1,0 +1,29 @@
+$kind: http-request
+url: "{{baseUrl}}/api/reports"
+method: POST
+headers:
+  Accept: application/json
+body:
+  type: formdata
+  content:
+    - type: text
+      key: farm_id
+      value: "{{farmId}}"
+    - type: file
+      key: image
+      src: []
+    - type: text
+      key: voice_text
+      value: my tomato leaves have spots
+      disabled: true
+    - type: text
+      key: language
+      value: en
+      disabled: true
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("status is 201", function () { pm.response.to.have.status(201); });
+      pm.test("envelope has ok", function () { pm.expect(pm.response.json()).to.have.property("ok"); });
+    language: text/javascript
+order: 5000

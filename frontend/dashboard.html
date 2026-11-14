@@ -15,9 +15,9 @@
 
   <style>
     .dash { display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 24px; align-items: start; }
-    .queue { position: sticky; top: calc(var(--nav-h) + 16px); display: grid; gap: 14px; max-height: calc(100vh - var(--nav-h) - 40px); }
+    .queue { position: sticky; top: calc(var(--nav-h) + 16px); display: flex; flex-direction: column; gap: 14px; max-height: calc(100vh - var(--nav-h) - 40px); }
     .queue-top { display: grid; gap: 12px; }
-    .queue-list { display: grid; gap: 10px; overflow-y: auto; padding: 2px 4px 2px 0; }
+   .queue-list { display: grid; align-content: start; gap: 10px; flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 2px 4px 2px 0; }
     .q-item { display: flex; gap: 12px; padding: 10px; border-radius: 14px; border: 1px solid var(--border); background: rgba(255, 255, 255, .03); cursor: pointer; transition: border-color .25s, background .25s, transform .25s var(--ease); outline: none; }
     .q-item:hover, .q-item:focus-visible { border-color: var(--border-strong); background: rgba(163, 214, 92, .06); transform: translateX(3px); }
     .q-item.on { border-color: var(--lime); background: rgba(163, 214, 92, .1); box-shadow: inset 0 0 0 1px var(--lime); }
